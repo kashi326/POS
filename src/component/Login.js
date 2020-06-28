@@ -60,8 +60,8 @@ function Login() {
       <div>
         <Grid container component='main' className={classes.root}>
           <CssBaseline />
-          <Grid xs={false} sm={4} md={7} className={classes.image} />
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Grid xs={false} sm={4} md={8} className={classes.image} />
+          <Grid item xs={12} sm={8} md={4} component={Paper} elevation={6} square>
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
