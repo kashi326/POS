@@ -2,8 +2,14 @@
         position: fixed;
         background-color: #222;
         height: 100%;
-        width: 15%;
+        width:15%;
         font-size: 20px;
+    }
+
+    @media only screen and (max-device-width: 600px) {
+        .sidebar{
+            /* display: none; */
+        }
     }
     ul{
         list-style: none;
