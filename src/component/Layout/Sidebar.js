@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -53,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
     },
@@ -73,11 +72,20 @@ const useStyles = makeStyles((theme) => ({
         }),
         marginLeft: 0,
     },
+    link:{
+        textDecoration:'none',
+        color:'black',
+        '&:hover':{
+            textDecoration:'none',
+            color:'orange'
+            
+        }
+    }
 }));
 
 function Sidebar(props) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -108,9 +116,9 @@ function Sidebar(props) {
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         Rayyan CCTV
-          </Typography>
+                    </Typography>
                     <div style={{ flexGrow: 1 }}></div>
-                    <Typography variant="h7"><Link to="/" style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography>
+                    <Typography variant="subtitle1"><Link className={classes.link} to="/" style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -129,19 +137,38 @@ function Sidebar(props) {
                 </div>
                 <Divider />
                 <List>
-                    <Link to="/home">
+                    <Link className={classes.link} to="/home" >
                         <ListItem button>
                             <ListItemIcon></ListItemIcon>
                             <ListItemText>Home</ListItemText>
                         </ListItem>
                     </Link>
-                    <Link to="/about">
+                    <Link className={classes.link} to="/inventory">
                         <ListItem button>
                             <ListItemIcon></ListItemIcon>
-                            <ListItemText>about</ListItemText>
+                            <ListItemText>Inventory</ListItemText>
                         </ListItem>
                     </Link>
-                    <Link to="/">
+                    <Link className={classes.link} to="#">
+                        <ListItem button>
+                            <ListItemIcon></ListItemIcon>
+                            <ListItemText>Sales</ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link className={classes.link} to="#">
+                        <ListItem button>
+                            <ListItemIcon></ListItemIcon>
+                            <ListItemText>Customers</ListItemText>
+                        </ListItem>
+                    </Link>
+
+                    <Link className={classes.link} to="#">
+                        <ListItem button>
+                            <ListItemIcon></ListItemIcon>
+                            <ListItemText>Expense</ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link className={classes.link} to="/">
                         <ListItem button>
                             <ListItemIcon></ListItemIcon>
                             <ListItemText>Login</ListItemText>
