@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles} from '@material-ui/core/styles';
 import '../App.css';
-import Redirect from 'react-router-dom/Redirect';
+import {Redirect} from 'react-router-dom';
 
 const style = makeStyles((theme) => ({
   root: {

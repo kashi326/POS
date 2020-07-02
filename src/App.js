@@ -6,6 +6,8 @@ import Home from './component/Home';
 import About from './component/About';
 import Sidebar from './component/Layout/Sidebar';
 import Inventory from './component/Inventory/Inventory';
+import AddinInventory from './component/Inventory/AddinInventory';
+import Sales from './component/Sales/Sales';
 function App() {
   return (
 
@@ -14,7 +16,9 @@ function App() {
         <Route path="/" exact component={Login} />
         <Route path="/home"><Sidebar component={<Home />} /></Route>
         <Route path="/about"><Sidebar component={<About />} /></Route>
-        <Route path="/inventory"><Sidebar component={<Inventory />} /></Route>
+        <Route path="/inventory" exact><Sidebar component={<Inventory />} /></Route>
+        <Route path="/inventory/add"><Sidebar component={<AddinInventory />} /></Route>
+        <Route path="/sales" exact><Sidebar component={<Sales />} /></Route>
       </Switch>
     </Router>
   );

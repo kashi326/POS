@@ -119,41 +119,41 @@ function Home() {
         <Table size="small" className={classes.table} component='table' style={{ marginLeft: '20%' }} elevation={2}>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Customer Name</TableCell>
-              <TableCell>Cell Number</TableCell>
-              <TableCell>Purchase Date</TableCell>
-              <TableCell>Remainings</TableCell>
+              <TableCell align="center">ID</TableCell>
+              <TableCell align="center">Customer Name</TableCell>
+              <TableCell align="center">Cell Number</TableCell>
+              <TableCell align="center">Purchase Date</TableCell>
+              <TableCell align="center">Remainings</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>1</TableCell>
-              <TableCell>dumyName1</TableCell>
-              <TableCell>03xxxxxxxxx</TableCell>
-              <TableCell>30/06/2020</TableCell>
-              <TableCell>15000</TableCell>
+              <TableCell align="center">1</TableCell>
+              <TableCell align="center">dumyName1</TableCell>
+              <TableCell align="center">03xxxxxxxxx</TableCell>
+              <TableCell align="center">30/06/2020</TableCell>
+              <TableCell align="center">15000</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>2</TableCell>
-              <TableCell>dumyName2</TableCell>
-              <TableCell>03xxxxxxxxx</TableCell>
-              <TableCell>30/06/2020</TableCell>
-              <TableCell>15000</TableCell>
+              <TableCell align="center">2</TableCell>
+              <TableCell align="center">dumyName2</TableCell>
+              <TableCell align="center">03xxxxxxxxx</TableCell>
+              <TableCell align="center">30/06/2020</TableCell>
+              <TableCell align="center">15000</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>3</TableCell>
-              <TableCell>dumyName3</TableCell>
-              <TableCell>03xxxxxxxxx</TableCell>
-              <TableCell>30/06/2020</TableCell>
-              <TableCell>15000</TableCell>
+              <TableCell align="center">3</TableCell>
+              <TableCell align="center">dumyName3</TableCell>
+              <TableCell align="center">03xxxxxxxxx</TableCell>
+              <TableCell align="center">30/06/2020</TableCell>
+              <TableCell align="center">15000</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>4</TableCell>
-              <TableCell>dumyName4</TableCell>
-              <TableCell>03xxxxxxxxx</TableCell>
-              <TableCell>30/06/2020</TableCell>
-              <TableCell>15000</TableCell>
+              <TableCell align="center">4</TableCell>
+              <TableCell align="center">dumyName4</TableCell>
+              <TableCell align="center">03xxxxxxxxx</TableCell>
+              <TableCell align="center">30/06/2020</TableCell>
+              <TableCell align="center">15000</TableCell>
             </TableRow>
           </TableBody>
         </Table>

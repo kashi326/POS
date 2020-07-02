@@ -149,7 +149,7 @@ function Sidebar(props) {
                             <ListItemText>Inventory</ListItemText>
                         </ListItem>
                     </Link>
-                    <Link className={classes.link} to="#">
+                    <Link className={classes.link} to="/sales">
                         <ListItem button>
                             <ListItemIcon></ListItemIcon>
                             <ListItemText>Sales</ListItemText>
