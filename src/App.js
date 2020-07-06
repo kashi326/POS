@@ -9,6 +9,8 @@ import Inventory from './pages/Inventory/Inventory';
 import AddtoInventory from './pages/Inventory/AddtoInventory';
 import Sales from './pages/Sales/Sales';
 import AddSales from './pages/Sales/Add';
+import Purchase from './pages/purchase/purchase';
+import Addpurchase from './pages/purchase/addPurchase';
 function App() {
   return (
     <Router>
@@ -20,6 +22,8 @@ function App() {
         <Route path="/inventory/add"><Sidebar component={<AddtoInventory />} /></Route>
         <Route path="/sales" exact><Sidebar component={<Sales />} /></Route>
         <Route path="/sales/add" exact><Sidebar component={<AddSales />} /></Route>
+        <Route path="/purchase" exact><Sidebar component={<Purchase />} /></Route>
+        <Route path="/purchase/add" exact><Sidebar component={<Addpurchase />} /></Route>
       </Switch>
     </Router>
   );

@@ -102,19 +102,25 @@ function Sidebar(props) {
     };
     // End Drawer Section
     // Dropdowns Section
-        //Inventory handler
+    //Inventory handler
     const [isInventoryOpen, setInventoryOpen] = React.useState(false);
     const InventoryhandleClick = () => {
         setInventoryOpen(!isInventoryOpen);
     };
 
-        //Sales Handler
+    //Sales Handler
     const [isSaleOpen, setSaleOpen] = React.useState(false);
 
     const SalehandleClick = () => {
         setSaleOpen(!isSaleOpen);
     };
-// End Dropdown Section
+    //Purchase handler
+    const [ispurchaseOpen, setpurchaseOpen] = React.useState(false);
+    const purchasehandleClick = () => {
+        setpurchaseOpen(!ispurchaseOpen);
+    };
+
+    // End Dropdown Section
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -166,7 +172,7 @@ function Sidebar(props) {
                     </Link>
                     {/* End Home Section */}
                     {/* Inventory Section */}
-                    <ListItem button onClick={InventoryhandleClick} style={isInventoryOpen? {backgroundColor:'lightgrey'}:{backgroundColor:'white'}}>
+                    <ListItem button onClick={InventoryhandleClick} style={isInventoryOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
                         <ListItemText primary="Inventory" />
                         {isInventoryOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
@@ -188,7 +194,7 @@ function Sidebar(props) {
                     </Collapse>
                     {/* End inventory Section */}
                     {/* Sales sections */}
-                    <ListItem button onClick={SalehandleClick} style={isSaleOpen? {backgroundColor:'lightgrey'}:{backgroundColor:'white'}}>
+                    <ListItem button onClick={SalehandleClick} style={isSaleOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
                         <ListItemText primary="Sales" />
                         {isSaleOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
@@ -210,6 +216,29 @@ function Sidebar(props) {
                     </Collapse>
 
                     {/* End Sales Section */}
+                    {/* Purchase Section */}
+                    <ListItem button onClick={purchasehandleClick} style={ispurchaseOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
+                        <ListItemText primary="Purchase" />
+                        {ispurchaseOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={ispurchaseOpen} timeout="auto" unmountOnExit>
+                        <List component="div" >
+                            <Link to="/purchase" className={classes.link}>
+                                <ListItem button >
+                                    <ListItemIcon className={classes.icons}></ListItemIcon>
+                                    <ListItemText primary="Purchase" />
+                                </ListItem>
+                            </Link>
+                            <Link to="/purchase/add" className={classes.link}>
+                                <ListItem button >
+                                    <ListItemIcon className={classes.icons}><AddIcon /></ListItemIcon>
+                                    <ListItemText primary="New Purchase" />
+                                </ListItem>
+                            </Link>
+                        </List>
+                    </Collapse>
+                    {/* End Purchase Section */}
+
                     {/* Customer Section */}
                     <Link className={classes.link} to="#">
                         <ListItem button>
@@ -244,7 +273,7 @@ function Sidebar(props) {
                 className={clsx(classes.content, {
                     [classes.contentShift]: open,
                 })}
-                style={{background: 'lightgray', minHeight: '100vh'}}
+                style={{ background: 'lightgray', minHeight: '100vh' }}
             >
                 <div className={classes.drawerHeader} />
                 {props.component}

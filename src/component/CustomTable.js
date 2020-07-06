@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 
 function CustomTable({ rowsName, rowsData }) {
     return (
-
-        <TableContainer>
-            <Table size="small">
+        <TableContainer style={{backgroundColor:'white'}}>
+            <Table>
                 <TableHead>
                     <TableRow>
                         {

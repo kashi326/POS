@@ -7,16 +7,7 @@ export const useInventoryItems = () => useContext(InventoryItemContext)
 
 export default function InventoryItemProvider({ children}) {
     let initialItems = [
-        {
-            id: 1,
-            serialNumber: '1',
-            name: 'test'
-        },
-        {
-            id: 2,
-            serialNumber: '2',
-            name: 'test2'
-        }
+        
     ];
     // 3
     const [items, setItems] = useState(initialItems)
