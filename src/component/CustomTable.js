@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
-
+import PropTypes from 'prop-types';
 
 function CustomTable({ rowsName, rowsData }) {
     return (
@@ -43,5 +43,8 @@ function CustomTable({ rowsName, rowsData }) {
         </TableContainer>
     );
 }
-
+CustomTable.propTypes = {
+    rowsName: PropTypes.isRequired,
+    rowsData: PropTypes.isRequired,
+  };
 export default CustomTable;

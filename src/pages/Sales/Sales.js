@@ -2,26 +2,28 @@ import React, { useState } from 'react';
 import { makeStyles, Typography, Button, Toolbar } from '@material-ui/core';
 import Textfield from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
-import CustomTable from '../UIcomponents/CustomTable';
+import CustomTable from '../../component/CustomTable';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100%'
     },
 }));
-function Inventory() {
-    const rowsData = [
-        { 'id': '1', 'name': '1MP', 'qauntity': '1', 'price': '1500' },
-        { 'id': '2', 'name': '2MP', 'qauntity': '3', 'price': '2000' },
-        { 'id': '3', 'name': '3MP', 'qauntity': '2', 'price': '2500' },
-        { 'id': '4', 'name': '4MP', 'qauntity': '4', 'price': '3200' },];
+function Sales() {
+    let rowsData = [
+        { 'id': '1', 'name': 'dummyName1', 'Total Items': '15', 'Total': '50000' },
+        { 'id': '1', 'name': 'dummyName1', 'Total Items': '15', 'Total': '50000' },
+        { 'id': '1', 'name': 'dummyName1', 'Total Items': '15', 'Total': '50000' },
+        { 'id': '1', 'name': 'dummyName1', 'Total Items': '15', 'Total': '50000' },
+    ];
     const rowsName = [
-        { 'id': 'ID', 'name': 'Product Name', 'qauntity': 'Quantity', 'price': 'Price' },
+        { 'id': 'ID', 'name': 'Customer Name', 'qauntity': 'Total Items', 'price': 'Total' },
     ];
     //Search Handler
     function searchHandler(e) {
-        console.log(e.target.value);
+        console.log(e.target.value);    
     }
+
     function clearHandler(e) {
         setSearchValue("");
     }
@@ -29,7 +31,7 @@ function Inventory() {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <Typography variant="h4" component="h2">Inventory</Typography>
+            <Typography variant="h4" component="h2">Sales</Typography>
             <Toolbar>
                 <Textfield
                     label="search"
@@ -41,7 +43,7 @@ function Inventory() {
                     Clear
                 </Button>
                 <div style={{ flexGrow: 1 }}></div>
-                <Button href="/inventory/add" variant="contained" color="primary" >
+                <Button href="/Sales/add" variant="contained" color="primary" >
                     Add
                     <AddIcon />
                 </Button>
@@ -50,4 +52,4 @@ function Inventory() {
         </div>
     );
 }
-export default Inventory;
+export default Sales;

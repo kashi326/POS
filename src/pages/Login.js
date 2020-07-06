@@ -51,7 +51,7 @@ const style = makeStyles((theme) => ({
 function Login() {
   
   const classes = style();
-  const [isLoggined, setIsLoggined] = useState(false);
+  const [isLoggined, setIsLoggined] = useState(true);
   if (isLoggined) {
     return (
       <Redirect to='/home'/>
