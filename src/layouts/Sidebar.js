@@ -163,7 +163,7 @@ function Sidebar(props) {
                 </div>
                 <Divider />
                 {/* Home section */}
-                <List alignItems="flex-start">
+                <List alignitems="flex-start">
                     <Link className={classes.link} to="/home" >
                         <ListItem button>
 
@@ -240,10 +240,10 @@ function Sidebar(props) {
                     {/* End Purchase Section */}
 
                     {/* Customer Section */}
-                    <Link className={classes.link} to="#">
+                    <Link className={classes.link} to="/customers">
                         <ListItem button>
 
-                            <ListItemText primary="Customer" />
+                            <ListItemText primary="Customers" />
 
                         </ListItem>
                     </Link>
