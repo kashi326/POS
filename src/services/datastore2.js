@@ -1,5 +1,8 @@
 import { createRxDatabase, addRxPlugin } from 'rxdb';
 
+
+// import {removeRxDatabase} from 'rxdb';
+// removeRxDatabase('heroesreactdb','idb');
 addRxPlugin(require('pouchdb-adapter-idb'));
 
 const collections = [
@@ -17,8 +20,19 @@ const collections = [
     {
       name: 'customers',
       schema: require('./Schema.js').default.customerSchema
+    },
+    {
+        name:'inventory',
+        schema: require('./InventorySchema').default.inventorySchema
+    },
+    {
+        name:'sales',
+        schema: require('./SalesSchema').default.SalesSchema
+    },
+    {
+        name:'receipt',
+        schema: require('./SalesSchema').default.ReceiptSchema
     }
-
 ];
 
 const syncURL = 'http://' + window.location.hostname + ':10102/';

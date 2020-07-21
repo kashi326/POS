@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, Paper, TextField, TableFooter, Button, Typography } from '@material-ui/core';
+import { Table, TableHead, TableBody, TableRow, TableCell, Paper, TextField, Button, makeStyles, Toolbar } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import { DeleteOutline } from '@material-ui/icons';
 import { useInventoryItems } from '../../context/InventoryItemProvider';
 import TitleHead from '../../component/TitleHead';
+import { Autocomplete } from '@material-ui/lab';
+import * as Database from '../../services/datastore2';
+import { useEffect } from 'react';
+const useStyles = makeStyles((theme) => ({
+    root: {
 
+    },
+    addSection: {
+        flex: '1 1 80%'
+    },
+    submitSection: {
+        whiteSpace: 'nowrap'
+    },
+    customerSelect: {
+        minWidth: '200px'
+    }
+}));
 
 function SaleItem({ index, item }) {
     let [localItem, setLocalItem] = useState(item);
@@ -32,6 +49,8 @@ function SaleItem({ index, item }) {
             </TableCell>
             <TableCell>
                 <TextField value={localItem.retail_price} onChange={(e) => onChange(e, 'retial_price')}></TextField>
+            </TableCell>
+            <TableCell>
                 <DeleteOutline onClick={() => removeItem(index)}></DeleteOutline>
             </TableCell>
         </TableRow>
@@ -39,38 +58,68 @@ function SaleItem({ index, item }) {
 }
 
 export default function AddItem() {
+    const classes = useStyles();
+    const [customers, setcustomers] = useState([]);
+    const [SelectedCustomer, setSelectedCustomer] = useState([{ 'customerName': 'hello' }]);
     const { items, addItem, cancelSalesList } = useInventoryItems();
     function cancelList() {
         cancelSalesList();
     }
+    function onSelectHandler(e) {
+        const value = e.target.value;
+        let cust = [];
+        customers.map(customer => customer.customerName === value? cust = customer:[]);
+        console.log(cust.customerName);
+        setSelectedCustomer(cust);
+    }
+    async function initDB() {
+        const db = await Database.get()
+        const cData = await db.customers.find().exec();
+        // console.log(cData);
+        setcustomers(cData);
+    }
+    useEffect(() => { initDB() }, []);
     return (
-        <div>
+        <Paper>
             <TitleHead name="New Sale"></TitleHead>
-            <Paper>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>No.</TableCell>
-                            <TableCell>Serial Number</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Description</TableCell>
-                            <TableCell>Retail Price</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {items.map((item, idx) => <SaleItem index={idx} item={item}></SaleItem>)}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow >
-                            <TableCell colSpan="12">
-                                <Button variant="contained" color="primary" onClick={() => addItem({ serialNumber: '', name: '', description: '', retail_price: '' })}>Add Item</Button>
-                                <Button variant="contained" href="/sales" onClick={cancelList} style={{ backgroundColor: "#dc3545", marginLeft: "70%" }}>Cancel</Button>
-                                <Button variant="contained" onClick={() => alert("submitted")} style={{ backgroundColor: "#28a745", marginLeft: "10px" }}>Submit</Button>
-                            </TableCell>
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </Paper>
-        </div>
+            <Toolbar>
+                <Autocomplete
+                    className={classes.customerSelect}
+                    id="customer List"
+                    freeSolo
+                    options={customers.map(ele => ele.customerName)}
+                    onSelect={onSelectHandler}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Customer" margin="normal" variant="standard" />
+                    )}
+                />
+                <div style={{ flex: "1 1 100%" }}></div>
+                <TextField label="Balance" margin="normal" variant="standard" value={SelectedCustomer.debitAmount?SelectedCustomer.debitAmount:0} />
+            </Toolbar>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>No.</TableCell>
+                        <TableCell>Serial Number</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Description</TableCell>
+                        <TableCell>Retail Price</TableCell>
+                        <TableCell></TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {items.map((item, idx) => <SaleItem key={idx} index={idx} item={item}></SaleItem>)}
+                </TableBody>
+            </Table>
+            <Toolbar>
+                <div className={classes.addSection}>
+                    <Button variant="contained" color="primary" onClick={() => addItem({ serialNumber: '', name: '', description: '', retail_price: '' })}>Add Item</Button>
+                </div>
+                <div className={classes.submitSection}>
+                    <Link className="btn btn-danger" to="/sales" onClick={cancelList}>Cancel</Link>
+                    <Button variant="contained" color="primary" onClick={() => alert("submitted")} style={{ marginLeft: "10px" }}>Submit</Button>
+                </div>
+            </Toolbar>
+        </Paper>
     )
 }

@@ -14,6 +14,7 @@ const heroSchema = {
   },
   'required': ['color']
 };
+
 const customerSchema = {
   'title': 'product schema',
   'description': 'Customer information',

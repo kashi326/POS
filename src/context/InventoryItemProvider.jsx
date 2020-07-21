@@ -5,9 +5,9 @@ import React, { createContext, useState, useContext } from 'react';
 const InventoryItemContext = createContext()
 export const useInventoryItems = () => useContext(InventoryItemContext)
 
-export default function InventoryItemProvider({ children}) {
+export default function InventoryItemProvider({ children }) {
     let initialItems = [
-        
+
     ];
     // 3
     const [items, setItems] = useState(initialItems)
@@ -19,11 +19,14 @@ export default function InventoryItemProvider({ children}) {
             {
                 id: items.length + 1,
                 serialNumber: item.serialNumber,
-                name: item.name
+                name: item.name,
+                quantity: item.quantity,
+                retial_price: item.retial_price,
+                total: item.total
             }
         ]);
 
-    function updateItem(item, itemId){
+    function updateItem(item, itemId) {
         // alert('hello' + index)
         let bItems = items.map(itm => {
             return itm.id === itemId ? item : itm;
@@ -31,7 +34,7 @@ export default function InventoryItemProvider({ children}) {
         // bItems.splice(index, 1);
         setItems(bItems);
     }
-    function cancelSalesList(){
+    function cancelSalesList() {
         setItems([]);
     }
 
@@ -43,7 +46,7 @@ export default function InventoryItemProvider({ children}) {
 
     // 6
     return (
-        <InventoryItemContext.Provider value={{ items, addItem, removeItem, updateItem,cancelSalesList }}>
+        <InventoryItemContext.Provider value={{ items, addItem, removeItem, updateItem, cancelSalesList }}>
             {children}
         </InventoryItemContext.Provider>
     )

@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 function Sidebar(props) {
     const classes = useStyles();
     // Drawer section
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);

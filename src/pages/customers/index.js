@@ -11,6 +11,7 @@ import * as Database from '../../services/datastore2';
 import { Toolbar, Button, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
+import Textfield from '@material-ui/core/TextField';
 
 const useStyles = makeStyles({
   table: {
@@ -27,41 +28,66 @@ const useStyles = makeStyles({
 export default function SimpleTable() {
   const classes = useStyles();
   const [customers, setCustomers] = useState([]);
-  
-  async function initDB(){
+
+  async function initDB() {
     const db = await Database.get();
     // await db.remove();
     // db.heroes.insert({ name: 'test hero' + Math.random(), color: 'red' });
     // db.customers.insert({ customerName: 'Zulfiqar' });
     const cData = await db.customers.find().exec();
     setCustomers(cData);
+    setFilteredData(cData);
   };
   useEffect(() => {
     initDB();
   }, []);
 
-  async function removeCustomer(_id){
+  async function removeCustomer(_id) {
     const db = await Database.get();
     const doc = await db.customers.findOne({
       selector: {
-        _id: {$eq: _id}
+        _id: { $eq: _id }
       }
     }).exec();
     console.log(doc);
     doc.remove();
     const cData = await db.customers.find().exec();
     setCustomers(cData);
+    setFilteredData(cData);
   }
+  function searchHandler(e) {
+    let value = e.target.value;
+    setSearchValue(value);
+    setFilteredData(customers.filter(v => v.customerName.toLowerCase().includes(value.toLowerCase())));
+  }
+
+  function clearHandler(e) {
+    console.log('called');
+    setSearchValue("");
+    setFilteredData(customers);
+  }
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredData, setFilteredData] = useState(customers);
 
   return (
     <Paper>
       <Toolbar>
-        <div className={classes.toolbarSearch}></div>
-        <div  className={classes.toolbarActions}>
+        <div className={classes.toolbarSearch}>
+          <Textfield
+            label="search"
+            variant="standard"
+            value={searchValue}
+            onChange={searchHandler}
+          />
+          <Button onClick={clearHandler} variant="contained" color="primary" >
+            Clear
+                </Button>
+        </div>
+        <div className={classes.toolbarActions}>
           <Link to="/customers/add">
             <Button variant="contained" color="primary">Add Customer</Button>
           </Link>
-        </div>      
+        </div>
       </Toolbar>
       <TableContainer>
         <Table className={classes.table} aria-label="simple table">
@@ -77,7 +103,7 @@ export default function SimpleTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((row) => (
+            {filteredData.map((row) => (
               <TableRow key={row._id}>
                 <TableCell>{row.customerName}</TableCell>
                 <TableCell>{row.customerAddress}</TableCell>
