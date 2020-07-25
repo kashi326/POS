@@ -54,7 +54,7 @@ function Login() {
   const [isLoggined, setIsLoggined] = useState(true);
   if (isLoggined) {
     return (
-      <Redirect to='/home'/>
+      <Redirect to='/home'/>    
     );
   }
   return (

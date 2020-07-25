@@ -250,7 +250,7 @@ function Sidebar(props) {
 
                     {/* End Customer Section */}
                     {/* Expense Section */}
-                    <Link className={classes.link} to="#">
+                    <Link className={classes.link} to="/expenses">
                         <ListItem button>
 
                             <ListItemText>Expense</ListItemText>
