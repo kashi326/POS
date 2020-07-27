@@ -42,7 +42,7 @@ const _create = async () => {
         console.log('isLeader now');
         document.title = '♛ ' + document.title;
     });
-
+    
     // create collections
     console.log('DatabaseService: create collections');
     await Promise.all(collections.map(colData => db.collection(colData)));

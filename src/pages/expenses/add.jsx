@@ -51,6 +51,21 @@ const AddExpense = () => {
       }
       console.log(expenseForm);
       const db = await Database.get();
+      // await db.expenses.bulkInsert([
+      //   {
+      //     ExpenseName: 'Saeed',
+      //     ExpenseDate: '2020-08-19',
+      //     PaidTo: 'ali',
+      //     Amount: 110,
+      //   },
+      //   {
+      //     ExpenseName: 'Saeed ul haq',
+      //     ExpenseDate: '2019-08-19',
+      //     PaidTo: 'ali khan',
+      //     Amount: 1103,
+      //   } 
+      // ]);
+      
       await db.expenses.insert(expenseForm);
       history.push('/expenses');
     };

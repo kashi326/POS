@@ -23,6 +23,9 @@ const useStyles = makeStyles({
   toolbarActions: {
     whiteSpace: 'nowrap'
   },
+  TableHead: {
+    fontWeight: '600 '
+  }
   
 });
 
