@@ -28,16 +28,18 @@ const useStyles = makeStyles({
 
 export default function SimpleTable() {
   const classes = useStyles();
-  const [customers, setCustomers] = useState([]);
+  const [expenses, setExpenses] = useState([]);
 
   async function initDB() {
     const db = await Database.get();
+    // not include
     // await db.remove();
     // db.heroes.insert({ name: 'test hero' + Math.random(), color: 'red' });
     // db.customers.insert({ customerName: 'Zulfiqar' });
-    const cData = await db.customers.find().exec();
-    setCustomers(cData);
-    setFilteredData(cData);
+    // not include
+    const eData = await db.expenses.find().exec();
+    setExpenses(eData);
+    setFilteredData(eData);
   };
   useEffect(() => {
     initDB();
@@ -45,30 +47,30 @@ export default function SimpleTable() {
 
   async function removeCustomer(_id) {
     const db = await Database.get();
-    const doc = await db.customers.findOne({
+    const doc = await db.expenses.findOne({
       selector: {
         _id: { $eq: _id }
       }
     }).exec();
     console.log(doc);
     doc.remove();
-    const cData = await db.customers.find().exec();
-    setCustomers(cData);
+    const cData = await db.expenses.find().exec();
+    setExpenses(cData);
     setFilteredData(cData);
   }
   function searchHandler(e) {
     let value = e.target.value;
     setSearchValue(value);
-    setFilteredData(customers.filter(v => v.customerName.toLowerCase().includes(value.toLowerCase())));
+    setFilteredData(expenses.filter(v => v.ExpenseName.toLowerCase().includes(value.toLowerCase())));
   }
 
   function clearHandler(e) {
     console.log('called');
     setSearchValue("");
-    setFilteredData(customers);
+    setFilteredData(expenses);
   }
   const [searchValue, setSearchValue] = useState("");
-  const [filteredData, setFilteredData] = useState(customers);
+  const [filteredData, setFilteredData] = useState(expenses);
 
   return (
     <Paper>
@@ -97,7 +99,7 @@ export default function SimpleTable() {
               <TableCell>Expense name</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Expense Date</TableCell>
-              <TableCell >Paid to</TableCell>
+              <TableCell align="right">Paid to</TableCell>
               {/* <TableCell align="right">Credit</TableCell>
               <TableCell align="right">Debit</TableCell> */}
               {/* <TableCell></TableCell> */}
@@ -106,12 +108,12 @@ export default function SimpleTable() {
           <TableBody>
             {filteredData.map((row) => (
               <TableRow key={row._id}>
-                <TableCell>{row.customerName}</TableCell>
-                <TableCell>{row.customerAddress}</TableCell>
-                <TableCell>{row.customerPhone}</TableCell>
-                <TableCell align="right">{row.startingBalance}</TableCell>
-                <TableCell align="right">{row.creditAmount}</TableCell>
-                <TableCell align="right">{row.debitAmount}</TableCell>
+                <TableCell>{row.ExpenseName}</TableCell>
+                <TableCell>{row.Amount}</TableCell>
+                <TableCell>{row.ExpenseDate}</TableCell>
+                <TableCell align="right">{row.PaidTo}</TableCell>
+                {/* <TableCell align="right">{row.creditAmount}</TableCell>
+                <TableCell align="right">{row.debitAmount}</TableCell> */}
                 <TableCell>
                   <IconButton onClick={() => removeCustomer(row._id)} aria-label="delete">
                     <DeleteIcon />

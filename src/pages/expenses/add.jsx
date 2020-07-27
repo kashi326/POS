@@ -50,9 +50,9 @@ const AddExpense = () => {
         expenseForm.Amount = 0;
       }
       console.log(expenseForm);
-      // const db = await Database.get();
-      // await db.customers.insert(expenseForm);
-      // history.push('/customers');
+      const db = await Database.get();
+      await db.expenses.insert(expenseForm);
+      history.push('/expenses');
     };
 
     return (

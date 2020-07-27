@@ -1,4 +1,5 @@
 import { createRxDatabase, addRxPlugin } from 'rxdb';
+// import Schema from './Schema';
 
 addRxPlugin(require('pouchdb-adapter-idb'));
 
@@ -17,6 +18,10 @@ const collections = [
     {
       name: 'customers',
       schema: require('./Schema.js').default.customerSchema
+    },
+    {
+        name: 'expenses',
+        schema: require('./Schema.js').default.expenseSchema
     }
 
 ];
