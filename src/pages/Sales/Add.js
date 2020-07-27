@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, Paper, TextField, Button, makeStyles, Toolbar } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Table, TableHead, TableBody, TableRow, TableCell, Paper, TextField, Button, makeStyles, Toolbar, Divider, TableContainer } from '@material-ui/core';
+import { Link, useHistory } from 'react-router-dom';
 import { DeleteOutline } from '@material-ui/icons';
 import { useInventoryItems } from '../../context/InventoryItemProvider';
 import TitleHead from '../../component/TitleHead';
@@ -9,7 +9,7 @@ import * as Database from '../../services/datastore2';
 import { useEffect } from 'react';
 const useStyles = makeStyles((theme) => ({
     root: {
-
+        height: '100vh'
     },
     addSection: {
         flex: '1 1 80%'
@@ -18,19 +18,30 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap'
     },
     customerSelect: {
-        minWidth: '200px'
+        minWidth: '300px'
+    },
+    productSelect: {
+        minWidth: '300px'
+    },
+    paymentTable: {
+        maxWidth: '300px',
+        float: 'inline-end',
+        marginTop: '10px'
     }
 }));
-
 function SaleItem({ index, item }) {
     let [localItem, setLocalItem] = useState(item);
     const { removeItem, updateItem } = useInventoryItems();
 
     function onChange(e, idx) {
-        console.log(idx + e.target.value);
         let itm = { ...localItem };
-        itm[idx] = e.target.value;
-        console.log(itm)
+        if (idx === 'quantity' || idx === 'price') {
+            itm[idx] = parseInt(e.target.value, 10);
+            itm['total'] = itm['quantity'] * itm['price'];
+        }
+        else
+            itm[idx] = e.target.value;
+
         setLocalItem(itm);
         updateItem(itm, itm.id);
     }
@@ -39,16 +50,17 @@ function SaleItem({ index, item }) {
         <TableRow>
             <TableCell>{index + 1}</TableCell>
             <TableCell>
-                <TextField value={localItem.serialNumber} onChange={(e) => onChange(e, 'serialNumber')}></TextField>
+                {localItem.productName}
             </TableCell>
             <TableCell>
-                <TextField value={localItem.name} onChange={(e) => onChange(e, 'name')}></TextField>
+                {/* <TextField type="number" value={localItem.quantity} onChange={(e) => onChange(e, 'quantity')}></TextField> */}
+                <input type="number" id="quantity" onChange={(e) => onChange(e, 'quantity')} defaultValue={1} />
             </TableCell>
             <TableCell>
-                <TextField value={localItem.description} onChange={(e) => onChange(e, 'description')}></TextField>
+                <input type="number" id="price" value={localItem.price} onChange={(e) => onChange(e, 'price')} />
             </TableCell>
             <TableCell>
-                <TextField value={localItem.retail_price} onChange={(e) => onChange(e, 'retial_price')}></TextField>
+                {localItem.total}
             </TableCell>
             <TableCell>
                 <DeleteOutline onClick={() => removeItem(index)}></DeleteOutline>
@@ -57,28 +69,106 @@ function SaleItem({ index, item }) {
     );
 }
 
+const uniqueReceiptID = Date.now();
+
 export default function AddItem() {
     const classes = useStyles();
     const [customers, setcustomers] = useState([]);
-    const [SelectedCustomer, setSelectedCustomer] = useState([{ 'customerName': 'hello' }]);
+    const [products, setproducts] = useState([]);
+    const [SelectedProduct, setSelectedProduct] = useState([]);
+    const [SelectedCustomer, setSelectedCustomer] = useState({ '_id': 0, 'debitAmount': 0 });
+
     const { items, addItem, cancelSalesList } = useInventoryItems();
+    let history = useHistory();
+
+    const [paid, setpaid] = useState(0);
+    const [discount, setdiscount] = useState(0);
+    const totalBill = items.reduce((a, b) => a + b.total, 0) + SelectedCustomer.debitAmount;
+
     function cancelList() {
         cancelSalesList();
     }
-    function onSelectHandler(e) {
-        const value = e.target.value;
-        let cust = [];
-        customers.map(customer => customer.customerName === value? cust = customer:[]);
-        console.log(cust.customerName);
-        setSelectedCustomer(cust);
+
+    function onSelectCustomerHandler(e, value, res) {
+        value && setSelectedCustomer(value);
     }
+
+    function onSelectProductHandler(e, value, res) {
+        value && setSelectedProduct(value);
+    }
+
+    function addtoList() {
+        if (!SelectedProduct._id) {
+            alert('Please select a product');
+            return;
+        }
+        const item = {
+            'receiptID': uniqueReceiptID,
+            'productID': SelectedProduct._id,
+            'productName': SelectedProduct.productName,
+            'quantity': 1,
+            'price': SelectedProduct.salePrice
+        };
+        const rProduct = products.filter(p => {
+            return p._id !== SelectedProduct._id
+        });
+        setproducts(rProduct);
+        addItem(item);
+    }
+
+    async function submitHandler() {
+        if (!SelectedCustomer._id) {
+            alert('Please select a customer');
+            return;
+        }
+        const db = await Database.get();
+        items.map(async item => {
+            await db.salesreceipt.insert(item)
+            const invenProduct = await db.inventory.findOne({
+                selector: {
+                    _id: { $eq: item.productID }
+                }
+            }).exec();
+            if (invenProduct) {
+                invenProduct.update({
+                    $inc: {
+                        quantity: -item.quantity
+                    }
+                });
+            }
+        });
+        const remaining = (totalBill - paid - discount)
+        db.sales.insert({
+            'receiptID': uniqueReceiptID,
+            'customerID': SelectedCustomer._id,
+            'totalProducts': items.length,
+            'totalBill': totalBill,
+            'totalPaid': parseInt(paid, 10),
+            'discount': parseInt(discount, 10),
+            'balance': remaining
+        });
+        const cust = await db.customers.findOne({
+            selector: {
+                _id: { $eq: SelectedCustomer._id }
+            }
+        }).exec();
+        cust.update({
+            $set: {
+                debitAmount: remaining
+            }
+        })
+        history.push('/sales');
+    }
+
     async function initDB() {
         const db = await Database.get()
         const cData = await db.customers.find().exec();
-        // console.log(cData);
+        const pData = await db.inventory.find().exec();
         setcustomers(cData);
+        setproducts(pData);
     }
     useEffect(() => { initDB() }, []);
+
     return (
         <Paper>
             <TitleHead name="New Sale"></TitleHead>
@@ -87,23 +177,42 @@ export default function AddItem() {
                     className={classes.customerSelect}
                     id="customer List"
                     freeSolo
-                    options={customers.map(ele => ele.customerName)}
-                    onSelect={onSelectHandler}
+                    getOptionLabel={(option) => option.customerName}
+                    options={customers}
+                    onChange={onSelectCustomerHandler}
                     renderInput={(params) => (
                         <TextField {...params} label="Customer" margin="normal" variant="standard" />
                     )}
                 />
                 <div style={{ flex: "1 1 100%" }}></div>
-                <TextField label="Balance" margin="normal" variant="standard" value={SelectedCustomer.debitAmount?SelectedCustomer.debitAmount:0} />
+                <TextField label="Balance" margin="normal" variant="standard" value={SelectedCustomer.debitAmount} readOnly />
+            </Toolbar>
+            <Divider />
+            <Toolbar>
+                <Autocomplete
+                    className={classes.productSelect}
+                    id="productSelect"
+                    getOptionLabel={(option) => option.productName}
+                    options={products}
+                    onChange={onSelectProductHandler}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Product" margin="normal" variant="standard" />
+                    )}
+                />
+
+                {products.length > 0 ?
+                    <Button variant="contained" color="primary" onClick={addtoList}>Add Item</Button>
+                    : <Button variant="contained" color="primary" onClick={addtoList} disabled>Add Item</Button>
+                }
             </Toolbar>
             <Table>
                 <TableHead>
                     <TableRow>
                         <TableCell>No.</TableCell>
-                        <TableCell>Serial Number</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Description</TableCell>
-                        <TableCell>Retail Price</TableCell>
+                        <TableCell>Quantity</TableCell>
+                        <TableCell>Price</TableCell>
+                        <TableCell>Total per Item</TableCell>
                         <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
@@ -111,13 +220,34 @@ export default function AddItem() {
                     {items.map((item, idx) => <SaleItem key={idx} index={idx} item={item}></SaleItem>)}
                 </TableBody>
             </Table>
+            <TableContainer>
+                <Table className={classes.paymentTable}>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>Total</TableCell>
+                            <TableCell>{totalBill}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Paid</TableCell>
+                            <TableCell><input type="number" value={paid} onChange={(e) => setpaid(e.target.value)} /></TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Discount</TableCell>
+                            <TableCell><input type="number" value={discount} onChange={(e) => setdiscount(e.target.value)} /></TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Remaining</TableCell>
+                            <TableCell><input type="number" value={totalBill - paid - discount} readOnly /></TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <Toolbar>
                 <div className={classes.addSection}>
-                    <Button variant="contained" color="primary" onClick={() => addItem({ serialNumber: '', name: '', description: '', retail_price: '' })}>Add Item</Button>
                 </div>
                 <div className={classes.submitSection}>
                     <Link className="btn btn-danger" to="/sales" onClick={cancelList}>Cancel</Link>
-                    <Button variant="contained" color="primary" onClick={() => alert("submitted")} style={{ marginLeft: "10px" }}>Submit</Button>
+                    <Button variant="contained" color="primary" onClick={submitHandler} style={{ marginLeft: "10px" }}>Submit</Button>
                 </div>
             </Toolbar>
         </Paper>

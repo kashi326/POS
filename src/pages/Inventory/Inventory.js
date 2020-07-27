@@ -6,6 +6,8 @@ import Textfield from '@material-ui/core/TextField';
 import { Link } from 'react-router-dom';
 import TitleHead from '../../component/TitleHead';
 import * as Database from '../../services/datastore2';
+import Editable from '../../component/Editable';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%'
@@ -17,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap'
   }
 }));
+
 function Inventory() {
   async function initDB() {
     const db = await Database.get();
@@ -41,19 +44,35 @@ function Inventory() {
     setFilteredData(invenData);
   }
 
-  //Search Handler
   function searchHandler(e) {
     let value = e.target.value;
     setSearchValue(value);
     setFilteredData(rowsData.filter(v => v.productName.toLowerCase().includes(value.toLowerCase())));
   }
 
-  function clearHandler(e) {
-    console.log('called');
-    setSearchValue("");
+  function clearHandler() {
     setFilteredData(rowsData);
   }
-
+  async function updateData(id, changedValue) {
+    const db = await Database.get();
+    const toUpdate = await db.inventory.findOne({
+      selector: {
+        _id: { $eq: id }
+      }
+    }).exec();
+    setTimeout(() => {
+      if (toUpdate !== null) {
+        toUpdate.update({
+          $set: {
+            quantity: changedValue
+          }
+        });
+      } else {
+        alert('cannot update value');
+      }  
+    }, 1000);
+    
+  }
   const [rowsData, setrowsData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(rowsData);
@@ -85,9 +104,9 @@ function Inventory() {
             <TableRow>
               <TableCell align="center">Product Name</TableCell>
               <TableCell align="center">Serial Number</TableCell>
-              <TableCell align="right">Quantity</TableCell>
-              <TableCell align="right">Retail Price</TableCell>
-              <TableCell align="right">Sale Price</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell align="center">Retail Price</TableCell>
+              <TableCell align="center">Sale Price</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -96,9 +115,9 @@ function Inventory() {
               <TableRow key={row._id}>
                 <TableCell align="center">{row.productName}</TableCell>
                 <TableCell align="center">{row.serialNumber}</TableCell>
-                <TableCell align="right">{row.quantity}</TableCell>
-                <TableCell align="right">{row.retailPrice}</TableCell>
-                <TableCell align="right">{row.salePrice}</TableCell>
+                <Editable id={row._id} value={row.quantity} updateData={updateData} />
+                <TableCell align="center">{row.retailPrice}</TableCell>
+                <TableCell align="center">{row.salePrice}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => removeCustomer(row._id)} aria-label="delete">
                     <DeleteIcon />

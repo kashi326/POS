@@ -8,7 +8,7 @@ const SalesSchema = {
       type: 'number'
     },
     customerID: {
-      type: 'number'
+      type: 'string'
     },
     totalProducts: {
       type: 'number',
@@ -21,6 +21,10 @@ const SalesSchema = {
     totalPaid: {
       type: 'number',
       default: 0
+    },
+    discount:{
+      type:'number',
+      default:0
     },
     balance:{
       type: 'number',
@@ -40,10 +44,16 @@ const ReceiptSchema = {
     productID:{
       type:'number'
     },
+    productName:{
+      type:'string'
+    },
     quantity:{
       type:'number'
     },
     price:{
+      type:'number'
+    },
+    total:{
       type:'number'
     }
   }

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, Paper, Button, Toolbar, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
+import { makeStyles, Paper, Button, Toolbar, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, ListItem } from '@material-ui/core';
 import Textfield from '@material-ui/core/TextField';
 import { Link } from 'react-router-dom';
 import TitleHead from '../../component/TitleHead';
 import * as Database from '../../services/datastore2';
+import CreateIcon from '@material-ui/icons/Create';
+import { EditAttributes } from '@material-ui/icons';
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100%'
@@ -18,16 +20,99 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap'
     }
 }));
+function Editable({ saleID, customerID, totalPaid,initDB}) {
+    const [editable, seteditable] = useState(false);
+    const [newPaid, setnewPaid] = useState(0);
+    const [error, seterror] = useState(false);
+    function changeHandler(e) {
+        if (e.target.value >= 0) {
+            setnewPaid(Number(e.target.value));
+            seterror(false);
+        }
+        else {
+            seterror(true);
+        }
+    }
+    async function submitHandler() {
+        if (editable) {
+            seterror(false);
+        }
+        const db = await Database.get();
+        const cust = await db.customers.findOne({
+            selector: {
+                _id: { $eq: customerID }
+            }
+        }).exec();
+        const sale = await db.sales.findOne({
+            selector: {
+                _id: { $eq: saleID }
+            }
+        }).exec();
+        if (cust !== null && sale !== null) {
+            cust.update({
+                $inc: {
+                    debitAmount: -newPaid
+                }
+            });
+            sale.update({
+                $inc: {
+                    totalPaid: newPaid,
+                    balance: -newPaid
+                }
+            });
+            initDB();
+            seteditable(!editable);
+        }else{
+            alert('something went wrong');
+        }
+    }
+    return (
+        <TableCell style={{ maxWidth: '100px' }}>
+            <div style={{ display: 'inline flex' }}>
+                {
+                    editable ?
+                        <input type="number" value={newPaid} onChange={changeHandler} style={{ maxWidth: '100px' }} /> :
+                        <p style={{ marginTop: 'revert' }}>{totalPaid}</p>
+                }
+                <ListItem button onClick={submitHandler} >{editable ? <EditAttributes /> : <CreateIcon />}</ListItem>
+            </div>
+            {
+                error ? <p style={{ color: 'red' }}>invalid value!</p> : ''
+            }
+
+        </TableCell>
+    );
+}
+
+function TableCellCustomerName({ id }) {
+    const [updateCustomer, setupdateCustomer] = useState([]);
+    async function initDB() {
+        const db = await Database.get();
+        const customer = await db.customers.findOne({
+            selector: {
+                _id: { $eq: id }
+            }
+        }).exec();
+        setupdateCustomer(customer);
+    }
+    useEffect(() => { initDB() });
+    return (
+        <TableCell>{updateCustomer.customerName}</TableCell>
+    );
+}
+
 function Sales() {
+    const [searchValue, setSearchValue] = useState("");
+    const [salesData, setSalesData] = useState([]);
+    const [FilteredData, setFilteredData] = useState(salesData);
+    const classes = useStyles();
     async function initDB() {
         const db = await Database.get();
         const sData = await db.sales.find().exec();
-        console.log(sData);
         setSalesData(sData);
         setFilteredData(sData);
     };
     useEffect(() => { initDB() }, []);
-    //Search Handler
     function searchHandler(e) {
         let value = e.target.value;
         setSearchValue(value);
@@ -38,10 +123,6 @@ function Sales() {
         setSearchValue("");
         setFilteredData(salesData);
     }
-    const [searchValue, setSearchValue] = useState("");
-    const [salesData, setSalesData] = useState([]);
-    const [FilteredData, setFilteredData] = useState(salesData);
-    const classes = useStyles();
 
     return (
         <Paper className={classes.root}>
@@ -59,34 +140,34 @@ function Sales() {
                 </Button>
                 </div>
                 <div className={classes.toolbarActions}>
-                    <Link to="/customers/add">
-                        <Button variant="contained" color="primary">Add Customer</Button>
+                    <Link to="/sales/add">
+                        <Button variant="contained" color="primary">Add Sale</Button>
                     </Link>
                 </div>
             </Toolbar>
-            <TableContainer border={1}>
-                <Table className="table table-bordered">
+            <TableContainer>
+                <Table size="small">
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>
                             <TableCell>Receipt No<b>#</b></TableCell>
                             <TableCell>Customer Name</TableCell>
                             <TableCell>Total items</TableCell>
-                            <TableCell>Total</TableCell>
-                            <TableCell>Paid</TableCell>
+                            <TableCell>Total Bill</TableCell>
+                            <TableCell >Paid</TableCell>
                             <TableCell>Remainings</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {
-                            FilteredData.map(row => 
-                                <TableRow>
-                                    <TableCell>{row._id}</TableCell>
+                            FilteredData.map((row, idx) =>
+                                <TableRow key={idx}>
+                                    <TableCell>{idx + 1}</TableCell>
                                     <TableCell>{row.receiptID}</TableCell>
-                                    <TableCell>{row.customerID}</TableCell>
+                                    <TableCellCustomerName id={row.customerID} />
                                     <TableCell>{row.totalProducts}</TableCell>
                                     <TableCell>{row.totalBill}</TableCell>
-                                    <TableCell>{row.totalPaid}</TableCell>
+                                    <Editable saleID={row._id} customerID={row.customerID} totalPaid={row.totalPaid} initDB={initDB}></Editable>
                                     <TableCell>{row.balance}</TableCell>
                                 </TableRow>
                             )

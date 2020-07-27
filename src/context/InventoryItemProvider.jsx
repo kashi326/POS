@@ -13,18 +13,18 @@ export default function InventoryItemProvider({ children }) {
     const [items, setItems] = useState(initialItems)
 
     // 4
-    const addItem = item =>
+    const addItem = item => {
         setItems([
             ...items,
             {
-                id: items.length + 1,
-                serialNumber: item.serialNumber,
-                name: item.name,
+                receiptID: item.receiptID,
+                productName: item.productName,
                 quantity: item.quantity,
-                retial_price: item.retial_price,
-                total: item.total
+                price: item.price,
+                total: parseInt(item.quantity, 10) * parseFloat(item.price, 10)
             }
         ]);
+    };
 
     function updateItem(item, itemId) {
         // alert('hello' + index)

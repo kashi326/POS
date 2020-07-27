@@ -17,7 +17,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { Link } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
-import { Collapse } from '@material-ui/core';
+import { Collapse, Button } from '@material-ui/core';
+import * as Database from '../services/datastore2';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -144,7 +145,8 @@ function Sidebar(props) {
                         Rayyan CCTV
                     </Typography>
                     <div style={{ flexGrow: 1 }}></div>
-                    <Typography variant="subtitle1"><Link className={classes.link} to="/" style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography>
+                    {/* <Typography variant="subtitle1"><Link className={classes.link} onClick={()=>Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography> */}
+                    <Typography variant="subtitle1"><Button className={classes.link} onClick={()=>Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Drop Database</Button></Typography>
                 </Toolbar>
             </AppBar>
             <Drawer

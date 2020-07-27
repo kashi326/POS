@@ -1,10 +1,8 @@
 import { createRxDatabase, addRxPlugin } from 'rxdb';
 
 
-// import {removeRxDatabase} from 'rxdb';
-// removeRxDatabase('heroesreactdb','idb');
+import {removeRxDatabase} from 'rxdb';
 addRxPlugin(require('pouchdb-adapter-idb'));
-
 const collections = [
     {
         name: 'heroes',
@@ -30,8 +28,16 @@ const collections = [
         schema: require('./SalesSchema').default.SalesSchema
     },
     {
-        name:'receipt',
+        name:'salesreceipt',
         schema: require('./SalesSchema').default.ReceiptSchema
+    },
+    {
+        name:'purchase',
+        schema: require('./purchaseSchema').default.purchaseSchema
+    },
+    {
+        name:'purchasereceipt',
+        schema: require('./purchaseSchema').default.purchaseReceiptSchema
     }
 ];
 
@@ -82,4 +88,7 @@ export const get = () => {
     if (!dbPromise)
         dbPromise = _create();
     return dbPromise;
+}
+export const remove = ()=>{
+    removeRxDatabase('heroesreactdb','idb');
 }
