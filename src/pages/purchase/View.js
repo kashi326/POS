@@ -1,6 +1,7 @@
 import React from 'react';
-import { Paper, Table, TableBody, TableRow, TableCell, TableHead, Card, CardContent, makeStyles, Divider, Typography, TableFooter } from '@material-ui/core';
+import { Paper, Table, TableBody, TableRow, TableCell, TableHead, Card, CardContent, makeStyles, Divider, Typography, TableFooter, TableContainer, Fab } from '@material-ui/core';
 import * as Database from '../../services/datastore2';
+import AddIcon from '@material-ui/icons/Add';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -23,7 +24,8 @@ const useStyles = makeStyles({
   }
 });
 
-function PurchaseView() {
+const today = Date().toString().substring(3, 15);
+function Bill() {
   const classes = useStyles();
   const { id } = useParams();
   const [purchaseReceipt, setpurchaseReceipt] = useState([]);
@@ -50,7 +52,7 @@ function PurchaseView() {
     initDB();
   }, [id]);
   return (
-    <Paper className={classes.root}>
+    <Paper>
       <Card className={classes.card}>
         <img src={logo} alt="" className={classes.image} />
         <CardContent align="right" className={classes.cardContent}>
@@ -60,17 +62,20 @@ function PurchaseView() {
           <p>Email:mohsinibrar2010@gmail.com</p>
         </CardContent>
       </Card>
+
       <Divider />
+
       <Typography align="center" variant="h5" component="h5"><i>Invoice</i></Typography>
       <Card className={classes.card}>
-        <CardContent className={classes.image}>
+        <CardContent>
           <p>Seller Name:{purchaseRecord.sellerName}</p>
         </CardContent>
         <CardContent align="right" className={classes.cardContent}>
           <p >Invoice:{id}</p>
-          <p>Date:</p>
+          <p>Date:{today}</p>
         </CardContent>
       </Card>
+
       <Table>
         <TableHead>
           <TableRow>
@@ -96,7 +101,7 @@ function PurchaseView() {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell></TableCell>
+            <TableCell>Total</TableCell>
             <TableCell></TableCell>
             <TableCell>{purchaseRecord.totalProducts}</TableCell>
             <TableCell></TableCell>
@@ -104,24 +109,41 @@ function PurchaseView() {
           </TableRow>
         </TableFooter>
       </Table>
-      <Table style={{ maxWidth: '300px', float: 'inline-end' }}>
-        <TableBody>
-          <TableRow>
-            <TableCell>Total</TableCell>
-            <TableCell>{purchaseRecord.bill}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Paid</TableCell>
-            <TableCell>{purchaseRecord.paid}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Outstandings</TableCell>
-        <TableCell>{purchaseRecord.remainingBalance}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <Divider/>
+      <TableContainer >
+        <Table style={{ maxWidth: '300px', float: 'right' }}>
+          <TableBody>
+            <TableRow>
+              <TableCell>Total</TableCell>
+              <TableCell>{purchaseRecord.bill}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Paid</TableCell>
+              <TableCell>{purchaseRecord.paid}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Outstandings</TableCell>
+              <TableCell>{purchaseRecord.remainingBalance}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Divider />
+      <p align="center">Error and Omission are accepted.</p>
     </Paper>
+  )
+}
+function PurchaseView() {
+  return (
+    <div>
+      <Bill></Bill>
+      <ReactToPrint
+        trigger={() => <Fab color="primary" aria-label="add" style={{ marginLeft: '90%' }}>
+                        <AddIcon />
+                      </Fab>}
+        content={() => Bill}
+      />
+
+    </div>
   )
 }
 export default PurchaseView;
