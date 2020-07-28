@@ -136,12 +136,6 @@ function PurchaseView() {
   return (
     <div>
       <Bill></Bill>
-      <ReactToPrint
-        trigger={() => <Fab color="primary" aria-label="add" style={{ marginLeft: '90%' }}>
-                        <AddIcon />
-                      </Fab>}
-        content={() => Bill}
-      />
 
     </div>
   )
