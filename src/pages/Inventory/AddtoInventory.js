@@ -1,100 +1,123 @@
 import React, { useState } from 'react';
-import { TextField, Button, Table, Paper, makeStyles, TableHead, TableBody, TableRow, TableCell, Typography, TableFooter } from '@material-ui/core';
-import { DeleteOutlineRounded, VisibilityOffSharp } from '@material-ui/icons';
+import { TextField, Button, Table, Paper, makeStyles, TableHead, TableBody, TableRow, TableCell, Toolbar } from '@material-ui/core';
+import { DeleteOutlineRounded } from '@material-ui/icons';
 import TitleHead from '../../component/TitleHead';
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%'
-    },
-    input: {
-        width: '50%',
-        marginLeft: '25%',
-        marginBottom: '5px'
-    }
+import * as Database from '../../services/datastore2';
+import { useHistory } from 'react-router-dom';
+const useStyles = makeStyles(() => ({
+  root: {
+    width: '100%'
+  },
+  input: {
+    width: '50%',
+    marginLeft: '25%',
+    marginBottom: '5px'
+  },
+  addSection: {
+    flex: '1 1 80%'
+  },
+  submitSection: {
+    whiteSpace: 'nowrap'
+  },
 }));
 function AddtoInventory() {
-    const classes = useStyles();
-    const [itemsInList, setItemsInList] = useState([]);
-    const [ItemName, setItemName] = useState("");
-    const [ItemSerailNumber, setItemSerialNumber] = useState("");
-    let List = itemsInList;
-    function AddInListHandler() {
-        if (ItemName === "" || ItemSerailNumber === "") {
-
-        } else {
-            List.push({'id':List.length+1, 'itemName': ItemName, 'serialNumber': ItemSerailNumber });
-            setItemsInList(List);
-            setItemName("");
-            setItemSerialNumber("");
+  const classes = useStyles();
+  const [itemsInList, setItemsInList] = useState([]);
+  const [ButtonDisabled, setButtonDisabled] = useState(false);
+  let history = useHistory();
+  let List = itemsInList;
+  function AddInListHandler() {
+    List.push({ productName: '', serialNumber: '', quantity: 0});
+    setItemsInList(List);
+    setButtonDisabled(true);
+  }
+  function removeItem(index) {
+    setButtonDisabled(false)
+    let bList = [...List];
+    bList.splice(index, 1);
+    console.log(bList);
+    setItemsInList(bList);
+  }
+  function cancelList() {
+    setItemsInList([]);
+  }
+  function onChange(e, key, index) {
+    setButtonDisabled(false)
+    let bItems = [...List];
+    if (key === 'quantity') {
+      bItems[index][key] = Number(e.target.value);
+    }
+    else
+      bItems[index][key] = e.target.value;
+    setItemsInList(bItems);
+  }
+  async function submitForm() {
+    const db = await Database.get();
+    itemsInList.forEach(async item => {
+      if (item.productName !== '' && item.quantity !== 0) {
+        const invenProduct = await db.inventory.findOne({
+          selector: {
+            productName: { $eq: item.productName },
+          }
+        }).exec();
+        if (invenProduct) {
+          invenProduct.update({
+            $inc: {
+              quantity: item.quantity
+            },
+          });
         }
-        console.log(itemsInList);
-    }
-    function removeItem(index) {
-        let bList = [...List];
-        bList.splice(index, 1);
-        console.log(bList);
-        setItemsInList(bList);
-    }
-    function cancelList() {
-        setItemsInList([]);
-    }
-    function onChange(e,key,index){
-        let bItems = [...List];
-        bItems[index][key] = e.target.value;
-        setItemsInList(bItems);
-    }
+        else
+          db.inventory.insert(item)
+        history.push('/inventory');
+      }
+      else
+        console.log('item is empty, not added')
+    });
+  }
 
-    return (
-        <div>
-            <TitleHead name="Add to Inventory"></TitleHead>
-            <Paper className={classes.root}>
-                <form>
-                    <Table size="dense">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Item Name</TableCell>
-                                <TableCell>Serial Number</TableCell>
-                                <TableCell>Action</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {List.map((item, index) => (
-                                <TableRow>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>
-                                        <TextField value={item.itemName} onChange={(e)=>onChange(e,'itemName',index)}></TextField>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField value={item.serialNumber} onChange={(e)=>onChange(e,'serialNumber',index)}/>
-                                    </TableCell>
-                                    <TableCell><DeleteOutlineRounded onClick={() => removeItem(index)} /></TableCell>
-                                </TableRow>
-                            ))}
-                            <TableRow>
-                                <TableCell>{List.length + 1}</TableCell>
-                                <TableCell>
-                                    <TextField label="Item Name" type="text" onChange={(e) => setItemName(e.target.value)} value={ItemName} />
-                                </TableCell>
-                                <TableCell>
-                                    <TextField label="Serial Number" onChange={(e) => setItemSerialNumber(e.target.value)} value={ItemSerailNumber} />
-                                </TableCell>
-                                <TableCell><VisibilityOffSharp /></TableCell>
-                            </TableRow>
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan="12">
-                                    <Button variant="contained" color="primary" onClick={AddInListHandler}>Add Item</Button>
-                                    <Button variant="contained" href="/inventory" onClick={cancelList} style={{ backgroundColor: "#dc3545", marginLeft: "70%" }}>Cancel</Button>
-                                    <Button variant="contained" onClick={() => alert("submitted")} style={{ backgroundColor: "#28a745", marginLeft: "10px" }}>Submit</Button>
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
-                </form>
-            </Paper>
+  return (
+    <Paper className={classes.root}>
+      <TitleHead name="Add to Inventory"></TitleHead>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell colSpan="3">Item Name</TableCell>
+            <TableCell colSpan="3">Serial Number</TableCell>
+            <TableCell colSpan="3">Quantity</TableCell>
+            <TableCell>Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {List.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell colSpan="3">
+                <TextField label="Item Name" type="text" onChange={(e) => onChange(e, 'productName', index)} value={item.productName} />
+              </TableCell>
+              <TableCell colSpan="3">
+                <TextField label="Serial Number" onChange={(e) => onChange(e, 'serialNumber', index)} value={item.serailNumber} />
+              </TableCell>
+              <TableCell colSpan="3">
+                <input type="number" label="quantity" onChange={(e) => onChange(e, 'quantity', index)} value={item.serailNumber} />
+              </TableCell>
+              <TableCell><DeleteOutlineRounded onClick={() => removeItem(index)} /></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Toolbar>
+        <div className={classes.addSection}>
+          <Button variant="contained" color="primary" onClick={AddInListHandler} disabled={ButtonDisabled}>Add Item</Button>
         </div>
-    )
+        <div className={classes.submitSection}>
+          <Button variant="contained" href="/inventory" onClick={cancelList} style={{ backgroundColor: "#dc3545" }}>Cancel</Button>
+          <Button variant="contained" onClick={submitForm} style={{ backgroundColor: "#28a745", marginLeft: "10px" }}>Submit</Button>
+        </div>
+      </Toolbar>
+    </Paper>
+
+  )
 }
 export default AddtoInventory;

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 function CustomTable({ rowsName, rowsData }) {
     return (
-        <TableContainer style={{backgroundColor:'white'}}>
+        <TableContainer style={{ backgroundColor: 'white' }}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -45,5 +45,5 @@ function CustomTable({ rowsName, rowsData }) {
 CustomTable.propTypes = {
     rowsName: PropTypes.isRequired,
     rowsData: PropTypes.isRequired,
-  };
+};
 export default CustomTable;

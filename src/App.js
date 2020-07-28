@@ -11,10 +11,12 @@ import Sales from './pages/Sales/Sales';
 import AddSales from './pages/Sales/Add';
 import Purchase from './pages/purchase/purchase';
 import Addpurchase from './pages/purchase/addPurchase';
+import PurchaseView from './pages/purchase/View';
 import CustomersList from './pages/customers/index';
 import AddCustomer from './pages/customers/add';
 import ExpenseList from './pages/expenses/index';
 import AddExpense from './pages/expenses/add';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
         <Route path="/sales" exact><Sidebar component={<Sales />} /></Route>
         <Route path="/sales/add" exact><Sidebar component={<AddSales />} /></Route>
         <Route path="/purchase" exact><Sidebar component={<Purchase />} /></Route>
+        <Route path="/purchase/view/:id" exact><Sidebar component={<PurchaseView />} /></Route>
         <Route path="/purchase/add" exact><Sidebar component={<Addpurchase />} /></Route>
         <Route path="/customers" exact><Sidebar component={<CustomersList />} /></Route>
         <Route path="/customers/add" exact><Sidebar component={<AddCustomer />} /></Route>
