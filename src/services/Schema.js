@@ -64,7 +64,7 @@ const expenseSchema = {
       default: 0
     }
   }
-}
+};
 
 
 

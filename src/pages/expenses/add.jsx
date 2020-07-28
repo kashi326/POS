@@ -51,6 +51,7 @@ const AddExpense = () => {
       }
       console.log(expenseForm);
       const db = await Database.get();
+
       // await db.expenses.bulkInsert([
       //   {
       //     ExpenseName: 'Saeed',
