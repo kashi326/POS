@@ -27,7 +27,7 @@ function AddtoInventory() {
   let history = useHistory();
   let List = itemsInList;
   function AddInListHandler() {
-    List.push({ productName: '', serialNumber: '', quantity: 0});
+    List.push({ productName: '', serialNumber: '', quantity: 0 });
     setItemsInList(List);
     setButtonDisabled(true);
   }
@@ -52,30 +52,50 @@ function AddtoInventory() {
     setItemsInList(bItems);
   }
   async function submitForm() {
+    if (validate()) {
+      return;
+    }
     const db = await Database.get();
     itemsInList.forEach(async item => {
-      if (item.productName !== '' && item.quantity !== 0) {
-        const invenProduct = await db.inventory.findOne({
-          selector: {
-            productName: { $eq: item.productName },
-          }
-        }).exec();
-        if (invenProduct) {
-          invenProduct.update({
-            $inc: {
-              quantity: item.quantity
-            },
-          });
+      const invenProduct = await db.inventory.findOne({
+        selector: {
+          productName: { $eq: item.productName },
         }
-        else
-          db.inventory.insert(item)
-        history.push('/inventory');
+      }).exec();
+      if (invenProduct) {
+        invenProduct.update({
+          $inc: {
+            quantity: item.quantity
+          },
+        });
       }
       else
-        console.log('item is empty, not added')
+        db.inventory.insert(item)
     });
+    history.push('/inventory');
   }
-
+  function validate() {
+    if (itemsInList.length === 0) {
+      alert('Please add a product');
+      return true;
+    }
+    let error = false;
+    itemsInList.forEach((item, idx) => {
+      if (item.productName === "") {
+        alert('Product ' + (idx + 1) + ' Product Name is Empty')
+        error = true;
+      }
+      else if (item.serialNumber === "") {
+        alert('Product ' + (idx + 1) + ' Serial Number is Empty')
+        error = true;
+      }
+      else if (item.quantity === 0) {
+        alert('Product ' + (idx + 1) + ' Qauntity is Zero')
+        error = true;
+      }
+    });
+    return error;
+  }
   return (
     <Paper className={classes.root}>
       <TitleHead name="Add to Inventory"></TitleHead>

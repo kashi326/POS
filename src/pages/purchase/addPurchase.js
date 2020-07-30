@@ -4,6 +4,7 @@ import { DeleteOutlineRounded } from '@material-ui/icons';
 import TitleHead from '../../component/TitleHead';
 import * as Database from '../../services/datastore2';
 import { useHistory } from 'react-router-dom';
+import {v4 as uuidV4} from 'uuid';
 const useStyles = makeStyles(() => ({
   root: {
     width: '100%'
@@ -25,7 +26,7 @@ const useStyles = makeStyles(() => ({
     marginTop: '10px'
   }
 }));
-const uniqueReceiptID = Date.now();
+const uniqueReceiptID = uuidV4().substring(0,8);
 function Addpurchase() {
   const classes = useStyles();
   const [itemsInList, setItemsInList] = useState([]);
@@ -60,6 +61,9 @@ function Addpurchase() {
     setItemsInList(bItems);
   }
   async function submitForm() {
+    if(validate()){
+      return;
+    }
     const db = await Database.get();
     let totalProducts = 0;
     let Bill = 0; 
@@ -96,7 +100,6 @@ function Addpurchase() {
       }
       else
         console.log('item is empty, not added')
-      return;
     });
     const purchasereceipt = {
       'receiptID': uniqueReceiptID,
@@ -109,6 +112,42 @@ function Addpurchase() {
     console.log(purchasereceipt);
     await db.purchase.insert(purchasereceipt);
     history.push('/purchase');
+  }
+
+  function validate(){
+    if(sellerName === ""){
+      alert('Seller Name is Empty');
+      return true;
+    }
+    if(itemsInList.length === 0){
+      alert("please add one product");
+      return true;
+    }
+    let error = false;
+    itemsInList.map((item,idx) => {
+      if(item.productName === ""){
+        alert('Product '+(idx+1)+' Product Name is Empty')
+        error = true;
+      }
+      if(item.serialNumber === ""){
+        alert('Product '+(idx+1)+' Serial Number is Empty')
+        error = true;
+      }
+      if(item.quantity === 0){
+        alert('Product '+(idx+1)+' Qauntity is Zero')
+        error = true;
+      }
+      if(item.retailPrice === 0){
+        alert('Product '+(idx+1)+' Retail Price is Empty')
+        error = true;
+      }
+      if(item.salePrice === 0){
+        alert('Product '+(idx+1)+' Sale Price is Empty')
+        error = true;
+      }
+      return false;
+    });
+    return error;
   }
   return (
     <Paper>

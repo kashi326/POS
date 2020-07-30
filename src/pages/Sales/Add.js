@@ -7,6 +7,7 @@ import TitleHead from '../../component/TitleHead';
 import { Autocomplete } from '@material-ui/lab';
 import * as Database from '../../services/datastore2';
 import { useEffect } from 'react';
+import { v4 as uuidV4 } from 'uuid';
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh'
@@ -69,7 +70,7 @@ function SaleItem({ index, item }) {
     );
 }
 
-const uniqueReceiptID = Date.now();
+const uniqueReceiptID = uuidV4().substring(0,8);
 
 export default function AddItem() {
     const classes = useStyles();
@@ -117,47 +118,49 @@ export default function AddItem() {
     }
 
     async function submitHandler() {
-        if (!SelectedCustomer._id) {
-            alert('Please select a customer');
+        if (validate()) {
+            console.log(true);
             return;
-        }
-        const db = await Database.get();
-        items.map(async item => {
-            await db.salesreceipt.insert(item)
-            const invenProduct = await db.inventory.findOne({
+        } else {
+            const db = await Database.get();
+            items.map(async item => {
+                await db.salesreceipt.insert(item)
+                const invenProduct = await db.inventory.findOne({
+                    selector: {
+                        _id: { $eq: item.productID }
+                    }
+                }).exec();
+                if (invenProduct) {
+                    invenProduct.update({
+                        $inc: {
+                            quantity: -item.quantity
+                        }
+                    });
+                }
+            });
+            const remaining = (totalBill - paid - discount)
+            db.sales.insert({
+                'receiptID': uniqueReceiptID,
+                'customerID': SelectedCustomer._id,
+                'totalProducts': items.length,
+                'bill': totalBill,
+                'paid': parseInt(paid, 10),
+                'discount': parseInt(discount, 10),
+                'balance': remaining
+            });
+            const cust = await db.customers.findOne({
                 selector: {
-                    _id: { $eq: item.productID }
+                    _id: { $eq: SelectedCustomer._id }
                 }
             }).exec();
-            if (invenProduct) {
-                invenProduct.update({
-                    $inc: {
-                        quantity: -item.quantity
-                    }
-                });
-            }
-        });
-        const remaining = (totalBill - paid - discount)
-        db.sales.insert({
-            'receiptID': uniqueReceiptID,
-            'customerID': SelectedCustomer._id,
-            'totalProducts': items.length,
-            'totalBill': totalBill,
-            'totalPaid': parseInt(paid, 10),
-            'discount': parseInt(discount, 10),
-            'balance': remaining
-        });
-        const cust = await db.customers.findOne({
-            selector: {
-                _id: { $eq: SelectedCustomer._id }
-            }
-        }).exec();
-        cust.update({
-            $set: {
-                debitAmount: remaining
-            }
-        })
-        history.push('/sales');
+            cust.update({
+                $set: {
+                    debitAmount: remaining
+                }
+            });
+            cancelSalesList();
+            history.push('/sales');
+        }
     }
 
     async function initDB() {
@@ -169,6 +172,29 @@ export default function AddItem() {
     }
     useEffect(() => { initDB() }, []);
 
+    function validate() {
+        let error = false;
+        if (SelectedCustomer._id === 0) {
+            alert('Select a customer or Add one');
+            return true;
+        }
+        if (items.length === 0) {
+            alert("please add one product");
+            return true;
+        }
+        items.map((item, idx) =>{ 
+            if (item.price === 0) {
+                alert('Product ' + (idx + 1) + ' Price is Zero')
+                error = true;
+            }
+            if (item.quantity === 0) {
+                alert('Product ' + (idx + 1) + ' Qauntity is Zero')
+                error = true;
+            }
+            return false;
+        });
+        return error;
+    }
     return (
         <Paper>
             <TitleHead name="New Sale"></TitleHead>

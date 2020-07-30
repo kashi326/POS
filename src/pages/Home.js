@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '@material-ui/core/Card'
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,8 +8,10 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Divider } from '@material-ui/core';
+import { TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Divider } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import * as Database from '../services/datastore2';
+import { useEffect } from 'react';
 const useStyles = makeStyles({
   root: {
 
@@ -22,143 +24,114 @@ const useStyles = makeStyles({
     height: 140,
   },
   table: {
-    maxWidth: '650px'
+    maxWidth: '800px'
   }
 });
 
 function Home() {
   const classes = useStyles();
-
+  const [sales, setsales] = useState([]);
+  const data = [
+    {
+      name: 'Total Sale',
+      value: 0.0,
+      Link: '/'
+    }, {
+      name: 'Monthly Sale',
+      value: 0.0,
+      Link: '/'
+    }, {
+      name: 'Customer Debt',
+      value: 0.0,
+      Link: '/'
+    }, {
+      name: 'Monthly Expense',
+      value: 0.0,
+      Link: '/'
+    }, {
+      name: 'Purchases',
+      value: 0.0,
+      Link: '/'
+    },
+  ]
+  async function initDB() {
+    const db = await Database.get();
+    const sData = await db.sales.find().exec();
+    setsales(sData);
+  }
+  useEffect(() => { initDB() }, []);
   return (
     <div className={classes.root}>
       <Grid container component='main' className={classes.root}>
         <CssBaseline />
-        <Grid item xs={12} md={4} lg={3}>
-          <Card className={classes.card}>
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Total Sale
-                </Typography>
-                <h5>0.00</h5>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Link to="/">Learn More</Link>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4} lg={3}>
-          <Card className={classes.card}>
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Total Sale
-                </Typography>
-                <h5>0.00</h5>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Link to="/">Learn More</Link>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4} lg={3}>
-          <Card className={classes.card}>
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Monthly Sale
-                </Typography>
-                <h5>0.00</h5>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Link to="/">Learn More</Link>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4} lg={3}>
-          <Card className={classes.card}>
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Customer Debt
-                </Typography>
-                <h5>0.00</h5>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Link to="/">Learn More</Link>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4} lg={3}>
-          <Card className={classes.card}>
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Monthly Expense
-                </Typography>
-                <h5>0.00</h5>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Link to="/">Learn More</Link>
-            </CardActions>
-          </Card>
-        </Grid>
+        {data.map((ele, idx) =>
+          <Grid item xs={12} md={4} lg={3} key={idx} >
+            <Card className={classes.card}>
+              <CardActionArea>
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {ele.name}
+                  </Typography>
+                  <h5>{ele.value}</h5>
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Link to={ele.Link}>Learn More</Link>
+              </CardActions>
+            </Card>
+          </Grid>
+        )}
       </Grid>
       <Divider style={{ marginBottom: '10px' }} />
       <TableContainer component={Paper}>
-        <Table size="small" className={classes.table} component='table' style={{ marginLeft: '20%' }} elevation={2}>
+        <Table size="small" className={classes.table} component='table' style={{ marginLeft: '10%' }} elevation={2}>
           <TableHead>
             <TableRow>
-              <TableCell align="center">ID</TableCell>
-              <TableCell align="center">Customer Name</TableCell>
-              <TableCell align="center">Cell Number</TableCell>
-              <TableCell align="center">Purchase Date</TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Customer Name</TableCell>
+              <TableCell>Cell Number</TableCell>
+              <TableCell>Sale Date</TableCell>
+              <TableCell align="center">Paid</TableCell>
               <TableCell align="center">Remainings</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell align="center">1</TableCell>
-              <TableCell align="center">dumyName1</TableCell>
-              <TableCell align="center">03xxxxxxxxx</TableCell>
-              <TableCell align="center">30/06/2020</TableCell>
-              <TableCell align="center">15000</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">2</TableCell>
-              <TableCell align="center">dumyName2</TableCell>
-              <TableCell align="center">03xxxxxxxxx</TableCell>
-              <TableCell align="center">30/06/2020</TableCell>
-              <TableCell align="center">15000</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">3</TableCell>
-              <TableCell align="center">dumyName3</TableCell>
-              <TableCell align="center">03xxxxxxxxx</TableCell>
-              <TableCell align="center">30/06/2020</TableCell>
-              <TableCell align="center">15000</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">4</TableCell>
-              <TableCell align="center">dumyName4</TableCell>
-              <TableCell align="center">03xxxxxxxxx</TableCell>
-              <TableCell align="center">30/06/2020</TableCell>
-              <TableCell align="center">15000</TableCell>
-            </TableRow>
+            {
+              sales.map((ele, idx) =>
+                <CustomerInfo id={ele.customerID} ele={ele} idx={idx} />
+              )
+            }
           </TableBody>
         </Table>
       </TableContainer>
     </div>
+  );
+}
 
+function CustomerInfo({ id, ele, idx }) {
+  const [updateCustomer, setupdateCustomer] = useState([]);
+  async function initDB() {
+    const db = await Database.get();
+    const customer = await db.customers.findOne({
+      selector: {
+        _id: { $eq: id }
+      }
+    }).exec();
+    if (customer != null)
+      setupdateCustomer(customer);
+    else
+      setupdateCustomer({ customerName: 'not found' });
+  }
+  useEffect(() => { initDB() });
+  return (
+    <TableRow key={idx}>
+      <TableCell>{ele.receiptID}</TableCell>
+      <TableCell >{updateCustomer.customerName}</TableCell>
+      <TableCell>{updateCustomer.customerPhone}</TableCell>
+      <TableCell>{ele.Date}</TableCell>
+      <TableCell>{ele.paid}</TableCell>
+      <TableCell>{ele.balance}</TableCell>
+    </TableRow>
   );
 }
 export default Home;

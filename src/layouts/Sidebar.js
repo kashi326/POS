@@ -19,6 +19,7 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import { Collapse, Button } from '@material-ui/core';
 import * as Database from '../services/datastore2';
+import { useEffect } from 'react';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -91,15 +92,21 @@ const useStyles = makeStyles((theme) => ({
 
 function Sidebar(props) {
     const classes = useStyles();
-    // Drawer section
-    const [open, setOpen] = React.useState(false);
+    let state = localStorage.getItem('sidebar') === "true" ? true : false;
 
+    // Drawer section
+    const [open, setOpen] = React.useState(state);
+    useEffect(() => {
+        localStorage.setItem('sidebar', open);
+    }, [open]);
     const handleDrawerOpen = () => {
         setOpen(true);
+        // localStorage.setItem('sidebar',open);
     };
 
     const handleDrawerClose = () => {
         setOpen(false);
+        // localStorage.setItem('sidebar',open);
     };
     // End Drawer Section
     // Dropdowns Section
@@ -146,7 +153,7 @@ function Sidebar(props) {
                     </Typography>
                     <div style={{ flexGrow: 1 }}></div>
                     {/* <Typography variant="subtitle1"><Link className={classes.link} onClick={()=>Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography> */}
-                    <Typography variant="subtitle1"><Button className={classes.link} onClick={()=>Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Drop Database</Button></Typography>
+                    <Typography variant="subtitle1"><Button className={classes.link} onClick={() => Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Drop Database</Button></Typography>
                 </Toolbar>
             </AppBar>
             <Drawer

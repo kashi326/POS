@@ -4,23 +4,27 @@ const purchaseSchema = {
   'version': 0,
   'type': 'object',
   'properties': {
-    receiptID:{
-      type:'number'
+    receiptID: {
+      type: 'string'
     },
-    sellerName:{
-      type:'string'
+    sellerName: {
+      type: 'string'
     },
-    totalProducts:{
-      type:'number'
+    Date: {
+      type: 'string',
+      default: Date().toString().substring(4, 15)
     },
-    bill:{
-      type:'number'
+    totalProducts: {
+      type: 'number'
     },
-    paid:{
-      type:'number'
+    bill: {
+      type: 'number'
     },
-    remainingBalance:{
-      type:'number'
+    paid: {
+      type: 'number'
+    },
+    remainingBalance: {
+      type: 'number'
     }
   }
 }
@@ -30,19 +34,19 @@ const purchaseReceiptSchema = {
   'version': 0,
   'type': 'object',
   'properties': {
-    receiptID:{
-      type:'number'
+    receiptID: {
+      type: 'string'
     },
-    productName:{
-      type:'string'
+    productName: {
+      type: 'string'
     },
-    quantity:{
-      type:'number'
+    quantity: {
+      type: 'number'
     },
-    retailPrice:{
-      type:'number'
+    retailPrice: {
+      type: 'number'
     }
   }
 }
 
-export default {purchaseSchema, purchaseReceiptSchema}
+export default { purchaseSchema, purchaseReceiptSchema }

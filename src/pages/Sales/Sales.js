@@ -20,69 +20,6 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap'
     }
 }));
-function Editable({ saleID, customerID, totalPaid,initDB}) {
-    const [editable, seteditable] = useState(false);
-    const [newPaid, setnewPaid] = useState(0);
-    const [error, seterror] = useState(false);
-    function changeHandler(e) {
-        if (e.target.value >= 0) {
-            setnewPaid(Number(e.target.value));
-            seterror(false);
-        }
-        else {
-            seterror(true);
-        }
-    }
-    async function submitHandler() {
-        if (editable) {
-            seterror(false);
-        }
-        const db = await Database.get();
-        const cust = await db.customers.findOne({
-            selector: {
-                _id: { $eq: customerID }
-            }
-        }).exec();
-        const sale = await db.sales.findOne({
-            selector: {
-                _id: { $eq: saleID }
-            }
-        }).exec();
-        if (cust !== null && sale !== null) {
-            cust.update({
-                $inc: {
-                    debitAmount: -newPaid
-                }
-            });
-            sale.update({
-                $inc: {
-                    totalPaid: newPaid,
-                    balance: -newPaid
-                }
-            });
-            initDB();
-            seteditable(!editable);
-        }else{
-            alert('something went wrong');
-        }
-    }
-    return (
-        <TableCell style={{ maxWidth: '100px' }}>
-            <div style={{ display: 'inline flex' }}>
-                {
-                    editable ?
-                        <input type="number" value={newPaid} onChange={changeHandler} style={{ maxWidth: '100px' }} /> :
-                        <p style={{ marginTop: 'revert' }}>{totalPaid}</p>
-                }
-                <ListItem button onClick={submitHandler} >{editable ? <EditAttributes /> : <CreateIcon />}</ListItem>
-            </div>
-            {
-                error ? <p style={{ color: 'red' }}>invalid value!</p> : ''
-            }
-
-        </TableCell>
-    );
-}
 
 function TableCellCustomerName({ id }) {
     const [updateCustomer, setupdateCustomer] = useState([]);
@@ -93,7 +30,10 @@ function TableCellCustomerName({ id }) {
                 _id: { $eq: id }
             }
         }).exec();
-        setupdateCustomer(customer);
+        if(customer != null)
+            setupdateCustomer(customer);
+        else
+            setupdateCustomer({customerName:'not found'});    
     }
     useEffect(() => { initDB() });
     return (
@@ -166,8 +106,8 @@ function Sales() {
                                     <TableCell>{row.receiptID}</TableCell>
                                     <TableCellCustomerName id={row.customerID} />
                                     <TableCell>{row.totalProducts}</TableCell>
-                                    <TableCell>{row.totalBill}</TableCell>
-                                    <Editable saleID={row._id} customerID={row.customerID} totalPaid={row.totalPaid} initDB={initDB}></Editable>
+                                    <TableCell>{row.bill}</TableCell>
+                                    <Editable saleID={row._id} customerID={row.customerID} totalPaid={row.paid} initDB={initDB}></Editable>
                                     <TableCell>{row.balance}</TableCell>
                                 </TableRow>
                             )
@@ -178,4 +118,68 @@ function Sales() {
         </Paper>
     );
 }
+function Editable({ saleID, customerID, totalPaid, initDB }) {
+    const [editable, seteditable] = useState(false);
+    const [newPaid, setnewPaid] = useState(0);
+    const [error, seterror] = useState(false);
+    function changeHandler(e) {
+        if (e.target.value >= 0) {
+            setnewPaid(Number(e.target.value));
+            seterror(false);
+        }
+        else {
+            seterror(true);
+        }
+    }
+    async function submitHandler() {
+        if (editable) {
+            seterror(false);
+        }
+        const db = await Database.get();
+        const cust = await db.customers.findOne({
+            selector: {
+                _id: { $eq: customerID }
+            }
+        }).exec();
+        const sale = await db.sales.findOne({
+            selector: {
+                _id: { $eq: saleID }
+            }
+        }).exec();
+        if (cust !== null && sale !== null) {
+            cust.update({
+                $inc: {
+                    debitAmount: -newPaid
+                }
+            });
+            sale.update({
+                $inc: {
+                    paid: newPaid,
+                    balance: -newPaid
+                }
+            });
+            initDB();
+            seteditable(!editable);
+        } else {
+            alert('something went wrong');
+        }
+    }
+    return (
+        <TableCell style={{ maxWidth: '100px' }}>
+            <div style={{ display: 'inline flex' }}>
+                {
+                    editable ?
+                        <input type="number" value={newPaid} onChange={changeHandler} style={{ maxWidth: '100px' }} /> :
+                        <p style={{ marginTop: 'revert' }}>{totalPaid}</p>
+                }
+                <ListItem button onClick={submitHandler} >{editable ? <EditAttributes /> : <CreateIcon />}</ListItem>
+            </div>
+            {
+                error ? <p style={{ color: 'red' }}>invalid value!</p> : ''
+            }
+
+        </TableCell>
+    );
+}
+
 export default Sales;
