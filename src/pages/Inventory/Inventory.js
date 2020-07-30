@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, Button, Toolbar, Paper } from '@material-ui/core';
-import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, IconButton } from '@material-ui/core';
+import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, IconButton, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Textfield from '@material-ui/core/TextField';
 import { Link } from 'react-router-dom';
@@ -53,7 +53,7 @@ function Inventory() {
   function clearHandler() {
     setFilteredData(rowsData);
   }
-  async function updateData(id, changedValue) {
+  async function updateQuantity(id, changedValue) {
     const db = await Database.get();
     const toUpdate = await db.inventory.findOne({
       selector: {
@@ -63,23 +63,53 @@ function Inventory() {
     setTimeout(() => {
       if (toUpdate !== null) {
         toUpdate.update({
-          $set: {
+          $inc: {
             quantity: changedValue
           }
         });
+        initDB();
+        setupdateSuccess(true);
       } else {
         alert('cannot update value');
-      }  
-    }, 1000);
-    
+      }
+    }, 100);
+
+  }
+  async function updateSalePrice(id, changedValue) {
+    const db = await Database.get();
+    const toUpdate = await db.inventory.findOne({
+      selector: {
+        _id: { $eq: id }
+      }
+    }).exec();
+    console.log(toUpdate)
+    setTimeout(() => {
+      if (toUpdate !== null) {
+        toUpdate.update({
+          $inc: {
+            salePrice: changedValue
+          }
+        });
+        initDB();
+        setupdateSuccess(true);
+      } else {
+        alert('cannot update value');
+      }
+    }, 100);
+
   }
   const [rowsData, setrowsData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(rowsData);
+  const [updateSuccess, setupdateSuccess] = useState(false);
   const classes = useStyles();
   return (
     <Paper className={classes.root}>
       <TitleHead name="Inventory" />
+      {
+        updateSuccess ? <Typography align="center" variant="h6" component="h6" style={{ color: 'green' }}>Update successfull</Typography>
+          : ''
+      }
       <Toolbar>
         <div className={classes.toolbarSearch}>
           <Textfield
@@ -115,9 +145,9 @@ function Inventory() {
               <TableRow key={row._id}>
                 <TableCell align="center">{row.productName}</TableCell>
                 <TableCell align="center">{row.serialNumber}</TableCell>
-                <Editable id={row._id} value={row.quantity} updateData={updateData} />
+                <Editable id={row._id} value={row.quantity} updateData={updateQuantity} />
                 <TableCell align="center">{row.retailPrice}</TableCell>
-                <TableCell align="center">{row.salePrice}</TableCell>
+                <Editable id={row._id} value={row.salePrice} updateData={updateSalePrice} />
                 <TableCell>
                   <IconButton onClick={() => removeCustomer(row._id)} aria-label="delete">
                     <DeleteIcon />

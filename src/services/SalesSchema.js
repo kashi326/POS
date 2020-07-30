@@ -5,20 +5,24 @@ const SalesSchema = {
   'type': 'object',
   'properties': {
     receiptID: {
-      type: 'number'
+      type: 'string'
     },
     customerID: {
       type: 'string'
+    },
+    Date: {
+      type: 'string',
+      default: Date().toString().substring(4, 15)
     },
     totalProducts: {
       type: 'number',
       default: 0
     },
-    totalBill: {
+    bill: {
       type: 'number',
       default: 0
     },
-    totalPaid: {
+    paid: {
       type: 'number',
       default: 0
     },
@@ -39,7 +43,7 @@ const ReceiptSchema = {
   'type': 'object',
   'properties': {
     receiptID:{
-      type:'number'
+      type:'string'
     },
     productID:{
       type:'number'
