@@ -107,7 +107,8 @@ function Inventory() {
     <Paper className={classes.root}>
       <TitleHead name="Inventory" />
       {
-        updateSuccess ? <Typography align="center" variant="h6" component="h6" style={{ color: 'green' }}>Update successfull</Typography>
+        updateSuccess ? 
+        <Typography align="center" variant="h6" component="h6" style={{ color: 'green' }}>Update successfull</Typography>
           : ''
       }
       <Toolbar>

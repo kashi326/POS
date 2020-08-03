@@ -36,26 +36,33 @@ function Home() {
       name: 'Total Sale',
       value: 0.0,
       Link: '/'
-    }, {
+    },
+    {
       name: 'Monthly Sale',
       value: 0.0,
       Link: '/'
-    }, {
+    },
+    {
       name: 'Customer Debt',
       value: 0.0,
       Link: '/'
-    }, {
+    },
+    {
       name: 'Monthly Expense',
       value: 0.0,
       Link: '/'
-    }, {
+    },
+    {
       name: 'Purchases',
       value: 0.0,
       Link: '/'
     },
-  ]
+  ];
+  
   async function initDB() {
     const db = await Database.get();
+    // await db.dump()
+    //   .then(json => console.dir(json));
     const sData = await db.sales.find().exec();
     setsales(sData);
   }
@@ -65,7 +72,7 @@ function Home() {
       <Grid container component='main' className={classes.root}>
         <CssBaseline />
         {data.map((ele, idx) =>
-          <Grid item xs={12} md={4} lg={3} key={idx} >
+          <Grid item xs={12} sm={6} md={8} lg={3} key={idx} >
             <Card className={classes.card}>
               <CardActionArea>
                 <CardContent>
@@ -84,7 +91,7 @@ function Home() {
       </Grid>
       <Divider style={{ marginBottom: '10px' }} />
       <TableContainer component={Paper}>
-        <Table size="small" className={classes.table} component='table' style={{ marginLeft: '10%' }} elevation={2}>
+        <Table size="small" component='table'>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
@@ -98,7 +105,7 @@ function Home() {
           <TableBody>
             {
               sales.map((ele, idx) =>
-                <CustomerInfo id={ele.customerID} ele={ele} idx={idx} />
+                <CustomerInfo id={ele.customerID} ele={ele} idx={idx} key={idx} />
               )
             }
           </TableBody>
@@ -120,7 +127,7 @@ function CustomerInfo({ id, ele, idx }) {
     if (customer != null)
       setupdateCustomer(customer);
     else
-      setupdateCustomer({ customerName: 'not found' });
+      setupdateCustomer({ customerName: 'not found', customerPhone: 'not found' });
   }
   useEffect(() => { initDB() });
   return (
@@ -129,8 +136,8 @@ function CustomerInfo({ id, ele, idx }) {
       <TableCell >{updateCustomer.customerName}</TableCell>
       <TableCell>{updateCustomer.customerPhone}</TableCell>
       <TableCell>{ele.Date}</TableCell>
-      <TableCell>{ele.paid}</TableCell>
-      <TableCell>{ele.balance}</TableCell>
+      <TableCell align="center">{ele.paid}</TableCell>
+      <TableCell align="center">{ele.balance}</TableCell>
     </TableRow>
   );
 }

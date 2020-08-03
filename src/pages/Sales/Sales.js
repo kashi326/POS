@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import TitleHead from '../../component/TitleHead';
 import * as Database from '../../services/datastore2';
 import CreateIcon from '@material-ui/icons/Create';
-import { EditAttributes } from '@material-ui/icons';
+import { EditAttributes, Pageview } from '@material-ui/icons';
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100%'
@@ -96,6 +96,7 @@ function Sales() {
                             <TableCell>Total Bill</TableCell>
                             <TableCell >Paid</TableCell>
                             <TableCell>Remainings</TableCell>
+                            <TableCell>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -109,6 +110,7 @@ function Sales() {
                                     <TableCell>{row.bill}</TableCell>
                                     <Editable saleID={row._id} customerID={row.customerID} totalPaid={row.paid} initDB={initDB}></Editable>
                                     <TableCell>{row.balance}</TableCell>
+                                    <TableCell><Link to={`/sales/view/${row.receiptID}`} ><Pageview/></Link></TableCell>
                                 </TableRow>
                             )
                         }

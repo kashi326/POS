@@ -2,7 +2,7 @@ import React from 'react';
 import { Paper, Table, TableBody, TableRow, TableCell, TableHead, Card, CardContent, makeStyles, Divider, Typography, TableFooter, TableContainer } from '@material-ui/core';
 import * as Database from '../../services/datastore2';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 import logo from '../../logo.jpeg';
 const useStyles = makeStyles({
@@ -52,7 +52,7 @@ function SalesView() {
     }
 
     initDB();
-  }, [id]);
+  }, [id,history]);
   return (
     <Paper>
       <ShopInfo />
@@ -83,15 +83,17 @@ function ShopInfo() {
   )
 }
 
-function CustomerInformation({ saleRecord }) {
+function CustomerInformation({ saleRecord}) {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
       <CardContent>
-        <p>Seller Name:{saleRecord.customerID}</p>
+        <p>Customer Name:{saleRecord.customerID}</p>
+        <p>Address:{saleRecord.customerID}</p>
+        <p>Cell Number:{saleRecord.customerID}</p>
       </CardContent>
       <CardContent align="right" className={classes.cardContent}>
-        <p >Invoice:{id}</p>
+        <p >Invoice:{saleRecord.receiptID}</p>
         <p>Date:{saleRecord.Date}</p>
       </CardContent>
     </Card>
@@ -99,6 +101,7 @@ function CustomerInformation({ saleRecord }) {
 }
 
 function BillInformation({saleReceipt,saleRecord}){
+  return (
 <Table>
         <TableHead>
           <TableRow>
@@ -132,6 +135,7 @@ function BillInformation({saleReceipt,saleRecord}){
           </TableRow>
         </TableFooter>
       </Table>
+  )
 }
 
 function PaymentDetail({ saleRecord }) {

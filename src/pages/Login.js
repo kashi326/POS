@@ -9,9 +9,12 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles} from '@material-ui/core/styles';
+import * as Database from '../services/datastore2';
+import { makeStyles } from '@material-ui/core/styles';
 import '../App.css';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { useEffect } from 'react';
+import Alert from '@material-ui/lab/Alert';
 
 const style = makeStyles((theme) => ({
   root: {
@@ -24,10 +27,10 @@ const style = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center'
   },
-  grid:{
-    height:'75%',
-    marginLeft:'25%',
-    marginTop:'5%',
+  grid: {
+    height: '75%',
+    marginLeft: '25%',
+    marginTop: '5%',
   },
   paper: {
     margin: theme.spacing(8, 4),
@@ -45,70 +48,94 @@ const style = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  
+
 }));
 
 function Login() {
-  
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+  const [error, seterror] = useState(false)
   const classes = style();
-  const [isLoggined, setIsLoggined] = useState(true);
-  if (isLoggined) {
-    return (
-      <Redirect to='/home'/>
-    );
+  async function initDB() {
+    const db = await Database.get();
+    const user = await db.user.findOne({ selector: { Email: { $eq: 'admin@admin.com' } } }).exec();
+    if (user === null) {
+      await db.user.insert({ Email: 'admin@admin.com', Password: 'admin' })
+    }
   }
+  useEffect(() => { initDB() }, []);
+  async function HandleLogin() {
+    const db = await Database.get();
+    const user = await db.user.findOne({
+      selector: {
+        Email: { $eq: username },
+        Password: { $eq: password }
+      }
+    }).exec();
+    if (user === null) {
+      seterror(true);
+    } else {
+      localStorage.setItem('isLogined', true);
+      seterror(false);
+    }
+  }
+  if (localStorage.getItem('isLogined') === 'true')
+    return (<Redirect to='/home' />)
+
   return (
     <div className="App">
       <div>
         <Grid container component='main' className={classes.root}>
           <CssBaseline />
-          <Grid xs={false} md={3}></Grid>
-          <Grid item xs={12} md={6} style={{marginTop:'20px'}} component={Paper} elevation={6} square>
+          <Grid item xs={false} md={3}></Grid>
+          <Grid item xs={12} md={6} style={{ marginTop: '20px' }} component={Paper} elevation={6} square>
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
                 Sign in
-          </Typography>
-              <form className={classes.form} noValidate>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                />
-                <Button
-                  type=""
-                  onClick={() => setIsLoggined(!isLoggined)}
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  Sign In
+               {error && <Alert severity="error">Username or Password is Incorrect.Please try again</Alert>}
+              </Typography>
+
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                onChange={(e) => setusername(e.target.value)}
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                onChange={(e) => setpassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type=""
+                onClick={HandleLogin}
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
             </Button>
-              </form>
             </div>
           </Grid>
         </Grid>

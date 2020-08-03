@@ -38,6 +38,14 @@ const collections = [
     {
         name:'purchasereceipt',
         schema: require('./purchaseSchema').default.purchaseReceiptSchema
+    },
+    {
+        name:'setting',
+        schema: require('./SettingSchema').default.SettingSchema
+    },
+    {
+        name:'user',
+        schema: require('./UserSchema').default.UserSchema
     }
 ];
 

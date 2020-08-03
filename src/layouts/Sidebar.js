@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,9 +14,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import AddIcon from '@material-ui/icons/Add';
 import { Collapse, Button } from '@material-ui/core';
 import * as Database from '../services/datastore2';
 import { useEffect } from 'react';
@@ -93,42 +92,91 @@ const useStyles = makeStyles((theme) => ({
 function Sidebar(props) {
     const classes = useStyles();
     let state = localStorage.getItem('sidebar') === "true" ? true : false;
-
-    // Drawer section
+    let isLogined = localStorage.getItem('isLogined');
     const [open, setOpen] = React.useState(state);
     useEffect(() => {
         localStorage.setItem('sidebar', open);
     }, [open]);
     const handleDrawerOpen = () => {
         setOpen(true);
-        // localStorage.setItem('sidebar',open);
     };
-
     const handleDrawerClose = () => {
         setOpen(false);
-        // localStorage.setItem('sidebar',open);
     };
-    // End Drawer Section
-    // Dropdowns Section
-    //Inventory handler
-    const [isInventoryOpen, setInventoryOpen] = React.useState(false);
-    const InventoryhandleClick = () => {
-        setInventoryOpen(!isInventoryOpen);
-    };
+    const sidebarLinks = [
+        {
+            name: 'Home',
+            path: '/home',
+        },
+        {
+            name: 'Inventory',
+            path: '',
+            children: [
+                {
+                    name: 'Inventory',
+                    path: '/inventory'
+                },
+                {
+                    name: 'Add to Inventory',
+                    path: '/inventory/add'
+                }
+            ]
+        },
+        {
+            name: 'Sales',
+            path: '',
+            children: [
+                {
+                    name: 'Sales',
+                    path: '/sales'
+                },
+                {
+                    name: 'Add to Sale',
+                    path: '/sales/add'
+                }
+            ]
+        },
+        {
+            name: 'Purchases',
+            path: '',
+            children: [
+                {
+                    name: 'Purchases',
+                    path: '/purchase'
+                },
+                {
+                    name: 'Add to Purchases',
+                    path: '/purchase/add'
+                }
+            ]
+        },
+        {
+            name: 'Customers',
+            path: '/customers'
+        },
+        {
+            name: 'Setting',
+            path: '',
+            children: [
+                {
+                    name: 'Setting',
+                    path: '/setting'
+                },
+                {
+                    name: 'Admin',
+                    path: '/admin'
+                }
+            ]
+        },
+        {
+            name: 'Login',
+            path: '/'
+        },
 
-    //Sales Handler
-    const [isSaleOpen, setSaleOpen] = React.useState(false);
+    ];
+    if (isLogined !== 'true')
+    return (<Redirect to='/' />)
 
-    const SalehandleClick = () => {
-        setSaleOpen(!isSaleOpen);
-    };
-    //Purchase handler
-    const [ispurchaseOpen, setpurchaseOpen] = React.useState(false);
-    const purchasehandleClick = () => {
-        setpurchaseOpen(!ispurchaseOpen);
-    };
-
-    // End Dropdown Section
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -171,123 +219,51 @@ function Sidebar(props) {
                     </IconButton>
                 </div>
                 <Divider />
-                {/* Home section */}
-                <List alignitems="flex-start">
-                    <Link className={classes.link} to="/home" >
-                        <ListItem button>
-
-                            <ListItemText>Home</ListItemText>
-                        </ListItem>
-                    </Link>
-                    {/* End Home Section */}
-                    {/* Inventory Section */}
-                    <ListItem button onClick={InventoryhandleClick} style={isInventoryOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
-                        <ListItemText primary="Inventory" />
-                        {isInventoryOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={isInventoryOpen} timeout="auto" unmountOnExit>
-                        <List component="div" >
-                            <Link to="/inventory" className={classes.link}>
-                                <ListItem button >
-                                    <ListItemIcon className={classes.icons}></ListItemIcon>
-                                    <ListItemText primary="Inventory" />
-                                </ListItem>
-                            </Link>
-                            <Link to="/inventory/add" className={classes.link}>
-                                <ListItem button >
-                                    <ListItemIcon className={classes.icons}><AddIcon /></ListItemIcon>
-                                    <ListItemText primary="Add to Inventory" />
-                                </ListItem>
-                            </Link>
-                        </List>
-                    </Collapse>
-                    {/* End inventory Section */}
-                    {/* Sales sections */}
-                    <ListItem button onClick={SalehandleClick} style={isSaleOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
-                        <ListItemText primary="Sales" />
-                        {isSaleOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={isSaleOpen} timeout="auto" unmountOnExit>
-                        <List component="div" >
-                            <Link to="/sales" className={classes.link}>
-                                <ListItem button className={classes.nested} >
-                                    <ListItemIcon className={classes.icons}></ListItemIcon>
-                                    <ListItemText primary="Sales" />
-                                </ListItem>
-                            </Link>
-                            <Link to="/sales/add" className={classes.link}>
-                                <ListItem button >
-                                    <ListItemIcon className={classes.icons}><AddIcon /></ListItemIcon>
-                                    <ListItemText primary="Add to Sales" />
-                                </ListItem>
-                            </Link>
-                        </List>
-                    </Collapse>
-
-                    {/* End Sales Section */}
-                    {/* Purchase Section */}
-                    <ListItem button onClick={purchasehandleClick} style={ispurchaseOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
-                        <ListItemText primary="Purchase" />
-                        {ispurchaseOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={ispurchaseOpen} timeout="auto" unmountOnExit>
-                        <List component="div" >
-                            <Link to="/purchase" className={classes.link}>
-                                <ListItem button >
-                                    <ListItemIcon className={classes.icons}></ListItemIcon>
-                                    <ListItemText primary="Purchase" />
-                                </ListItem>
-                            </Link>
-                            <Link to="/purchase/add" className={classes.link}>
-                                <ListItem button >
-                                    <ListItemIcon className={classes.icons}><AddIcon /></ListItemIcon>
-                                    <ListItemText primary="New Purchase" />
-                                </ListItem>
-                            </Link>
-                        </List>
-                    </Collapse>
-                    {/* End Purchase Section */}
-
-                    {/* Customer Section */}
-                    <Link className={classes.link} to="/customers">
-                        <ListItem button>
-
-                            <ListItemText primary="Customers" />
-
-                        </ListItem>
-                    </Link>
-
-                    {/* End Customer Section */}
-                    {/* Expense Section */}
-                    <Link className={classes.link} to="#">
-                        <ListItem button>
-
-                            <ListItemText>Expense</ListItemText>
-                        </ListItem>
-                    </Link>
-                    {/* End Expense Section */}
-                    {/* Login Section */}
-                    <Link className={classes.link} to="/">
-                        <ListItem button>
-
-                            <ListItemText>Login</ListItemText>
-                        </ListItem>
-                    </Link>
-
-                    {/* End Login Section */}
-                </List>
+                {sidebarLinks.map((item, idx) => <SidebarComponent item={item} key={idx} />)}
                 <Divider />
             </Drawer>
             <main
                 className={clsx(classes.content, {
                     [classes.contentShift]: open,
                 })}
-                style={{ background: 'lightgray', minHeight: '100vh' }}
+                style={{ background: 'lightgray', height: '100vh' }}
             >
                 <div className={classes.drawerHeader} />
                 {props.component}
             </main>
         </div >
     );
+}
+function SidebarComponent({ item }) {
+    const classes = useStyles();
+    const [isDropdownOpen, setisDropdownOpen] = useState(false);
+    return (
+        item.children ?
+            <div>
+                <ListItem button onClick={() => setisDropdownOpen(!isDropdownOpen)} style={isDropdownOpen ? { backgroundColor: 'lightgrey' } : { backgroundColor: 'white' }}>
+                    <ListItemText primary={item.name} />
+                    {isDropdownOpen ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={isDropdownOpen} timeout="auto" unmountOnExit>
+                    <List component="div" >
+                        {item.children.map((ele, idx) =>
+                            <Link to={ele.path} className={classes.link} key={idx}>
+                                <ListItem button >
+                                    <ListItemIcon className={classes.icons}></ListItemIcon>
+                                    <ListItemText primary={ele.name} />
+                                </ListItem>
+                            </Link>
+                        )}
+                    </List>
+                </Collapse>
+            </div>
+            :
+            <Link className={classes.link} to={item.path}>
+                <ListItem button>
+                    <ListItemText primary={item.name} />
+                </ListItem>
+            </Link>
+
+    )
 }
 export default Sidebar;

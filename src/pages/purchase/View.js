@@ -74,6 +74,7 @@ function ShopInfo() {
   return (
     <Card className={classes.card}>
       <img src={logo} alt="" className={classes.image} />
+      <p align="center">Personal use only</p>
       <CardContent align="right" className={classes.cardContent}>
         <h3>Rayyan CCTV</h3>
         <p >Totalai Khudukhel Buner</p>

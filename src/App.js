@@ -14,24 +14,76 @@ import Addpurchase from './pages/purchase/addPurchase';
 import PurchaseView from './pages/purchase/View';
 import CustomersList from './pages/customers/index';
 import AddCustomer from './pages/customers/add';
-
+import SalesView from './pages/Sales/View';
+import Setting from './pages/Setting/Setting';
+import ViewAdmin from './pages/Setting/ViewAdmin';
 
 function App() {
+  const navigation = [
+    {
+      component: <Home />,
+      path: "/home"
+    },
+    {
+      component: <About />,
+      path: "/about"
+    },
+    {
+      component: <Inventory />,
+      path: "/inventory"
+    },
+    {
+      component: <AddtoInventory />,
+      path: '/inventory/add'
+    },
+    {
+      component: <Purchase />,
+      path: '/purchase'
+    },
+    {
+      component: <Addpurchase />,
+      path: '/purchase/add'
+    },
+    {
+      component: <PurchaseView />,
+      path: '/purchase/view/:id'
+    },
+    {
+      component: <Sales />,
+      path: '/sales'
+    },
+    {
+      component: <AddSales />,
+      path: '/sales/add'
+    },
+    {
+      component: <SalesView />,
+      path: '/sales/view/:id'
+    },
+    {
+      component: <CustomersList />,
+      path: '/customers'
+    },
+    {
+      component: <AddCustomer />,
+      path: '/customers/add'
+    },
+    {
+      component: <Setting />,
+      path: '/setting'
+    },
+    {
+      component: <ViewAdmin />,
+      path: '/admin'
+    }
+  ]
   return (
     <Router>
       <Switch>
         <Route path="/" exact component={Login} />
-        <Route path="/home"><Sidebar component={<Home />} /></Route>
-        <Route path="/about"><Sidebar component={<About />} /></Route>
-        <Route path="/inventory" exact><Sidebar component={<Inventory />} /></Route>
-        <Route path="/inventory/add"><Sidebar component={<AddtoInventory />} /></Route>
-        <Route path="/sales" exact><Sidebar component={<Sales />} /></Route>
-        <Route path="/sales/add" exact><Sidebar component={<AddSales />} /></Route>
-        <Route path="/purchase" exact><Sidebar component={<Purchase />} /></Route>
-        <Route path="/purchase/view/:id" exact><Sidebar component={<PurchaseView />} /></Route>
-        <Route path="/purchase/add" exact><Sidebar component={<Addpurchase />} /></Route>
-        <Route path="/customers" exact><Sidebar component={<CustomersList />} /></Route>
-        <Route path="/customers/add" exact><Sidebar component={<AddCustomer />} /></Route>
+        {navigation.map((ele,idx) =>
+          <Route path={ele.path} exact key={idx}><Sidebar component={ele.component} /></Route>
+        )}
       </Switch>
     </Router>
   );
