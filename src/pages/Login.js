@@ -75,11 +75,13 @@ function Login() {
     if (user === null) {
       seterror(true);
     } else {
-      localStorage.setItem('isLogined', true);
-      seterror(false);
+      sessionStorage.setItem('isLogined', true);
+      sessionStorage.setItem('user', JSON.stringify(user));
+      setusername("");
     }
   }
-  if (localStorage.getItem('isLogined') === 'true')
+  let isLogined = sessionStorage.getItem('isLogined') === 'true' ? true : false;
+  if (isLogined)
     return (<Redirect to='/home' />)
 
   return (

@@ -71,15 +71,24 @@ function PurchaseView() {
 }
 function ShopInfo() {
   const classes = useStyles();
+  const [shopInfo, setshopInfo] = useState([]);
+  async function getShopInfo() {
+    const db = await Database.get();
+    const tempShopInfo = await db.setting.findOne().exec();
+    if (tempShopInfo !== null) {
+      setshopInfo(tempShopInfo);
+    }
+  }
+  useEffect(() => { getShopInfo() })
   return (
     <Card className={classes.card}>
       <img src={logo} alt="" className={classes.image} />
-      <p align="center">Personal use only</p>
+      <p style={{marginLeft:'auto'}}>Personal use only</p>
       <CardContent align="right" className={classes.cardContent}>
-        <h3>Rayyan CCTV</h3>
-        <p >Totalai Khudukhel Buner</p>
-        <p>Phone No:03456092099</p>
-        <p>Email:mohsinibrar2010@gmail.com</p>
+        <h3>{shopInfo.shopName}</h3>
+        <p >{shopInfo.shopAddress}</p>
+        <p>Phone No: {shopInfo.shopOwnerPhone}</p>
+        <p>Email: {shopInfo.shopOwnerEmail}</p>
       </CardContent>
     </Card>
 
@@ -93,7 +102,7 @@ function SellerInformation({ purchaseRecord, id }) {
         <p>Seller Name:{purchaseRecord.sellerName}</p>
       </CardContent>
       <CardContent align="right" className={classes.cardContent}>
-        <p >Invoice:{id.substring(0,8)}</p>
+        <p >Invoice:{id.substring(0, 8)}</p>
         <p>Date:{purchaseRecord.Date}</p>
       </CardContent>
     </Card>

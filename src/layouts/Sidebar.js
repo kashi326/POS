@@ -91,11 +91,11 @@ const useStyles = makeStyles((theme) => ({
 
 function Sidebar(props) {
     const classes = useStyles();
-    let state = localStorage.getItem('sidebar') === "true" ? true : false;
-    let isLogined = localStorage.getItem('isLogined');
+    let state = sessionStorage.getItem('sidebar') === "true" ? true : false;
+    let isLogined = sessionStorage.getItem('isLogined');
     const [open, setOpen] = React.useState(state);
     useEffect(() => {
-        localStorage.setItem('sidebar', open);
+        sessionStorage.setItem('sidebar', open);
     }, [open]);
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -165,17 +165,20 @@ function Sidebar(props) {
                 {
                     name: 'Admin',
                     path: '/admin'
+                },
+                {
+                    name:'Backup',
+                    path:'/backup'
                 }
             ]
         },
         {
-            name: 'Login',
+            name: 'Logout',
             path: '/'
         },
-
     ];
     if (isLogined !== 'true')
-    return (<Redirect to='/' />)
+        return (<Redirect to='/' />)
 
     return (
         <div className={classes.root}>
@@ -219,6 +222,7 @@ function Sidebar(props) {
                     </IconButton>
                 </div>
                 <Divider />
+                {/* Sidebar Component */}
                 {sidebarLinks.map((item, idx) => <SidebarComponent item={item} key={idx} />)}
                 <Divider />
             </Drawer>

@@ -27,6 +27,9 @@ const useStyles = makeStyles({
     maxWidth: '800px'
   }
 });
+const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+console.log(user);
+
 
 function Home() {
   const classes = useStyles();
@@ -58,15 +61,13 @@ function Home() {
       Link: '/'
     },
   ];
-  
+
   async function initDB() {
     const db = await Database.get();
-    // await db.dump()
-    //   .then(json => console.dir(json));
     const sData = await db.sales.find().exec();
     setsales(sData);
   }
-  useEffect(() => { initDB() }, []);
+  useEffect(() => { initDB() });
   return (
     <div className={classes.root}>
       <Grid container component='main' className={classes.root}>

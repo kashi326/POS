@@ -52,7 +52,7 @@ function SalesView() {
     }
 
     initDB();
-  }, [id,history]);
+  }, [id, history]);
   return (
     <Paper>
       <ShopInfo />
@@ -60,7 +60,7 @@ function SalesView() {
 
       <Typography align="center" variant="h5" component="h5"><i>Invoice</i></Typography>
       <CustomerInformation saleRecord={saleRecord} />
-      <BillInformation saleRecord={saleRecord} saleReceipt={saleReceipt}/>
+      <BillInformation saleRecord={saleRecord} saleReceipt={saleReceipt} />
       <PaymentDetail saleRecord={saleRecord} />
       <Divider />
       <p align="center">Error and Omission are accepted.</p>
@@ -70,71 +70,94 @@ function SalesView() {
 
 function ShopInfo() {
   const classes = useStyles();
+  const [shopInfo, setshopInfo] = useState([]);
+  async function getShopInfo() {
+    const db = await Database.get();
+    const tempShopInfo = await db.setting.findOne().exec();
+    if (tempShopInfo !== null) {
+      setshopInfo(tempShopInfo);
+    }
+  }
+  useEffect(()=>{getShopInfo()})
   return (
     <Card className={classes.card}>
       <img src={logo} alt="RayyanCCTV" className={classes.image} />
       <CardContent align="right" className={classes.cardContent}>
-        <h3>Rayyan CCTV</h3>
-        <p >Totalai khudukhel buner</p>
-        <p>Phone No:03456092099</p>
-        <p>Email:mohsinibrar2010@gmail.com</p>
+        <h3>{shopInfo.shopName}</h3>
+        <p >{shopInfo.shopAddress}</p>
+        <p>Phone No: {shopInfo.shopOwnerPhone}</p>
+        <p>Email: {shopInfo.shopOwnerEmail}</p>
       </CardContent>
     </Card>
   )
 }
 
-function CustomerInformation({ saleRecord}) {
+function CustomerInformation({ saleRecord }) {
   const classes = useStyles();
+  const [customer, setcustomer] = useState([]);
+
+  async function getCustomer() {
+    const db = await Database.get();
+    const tempCustomer = await db.customers.findOne({
+      selector: {
+        _id: { $eq: saleRecord.customerID }
+      }
+    }).exec();
+    if (tempCustomer !== null) {
+      setcustomer(tempCustomer)
+    }
+  }
+  useEffect(() => { getCustomer() });
   return (
     <Card className={classes.card}>
       <CardContent>
-        <p>Customer Name:{saleRecord.customerID}</p>
-        <p>Address:{saleRecord.customerID}</p>
-        <p>Cell Number:{saleRecord.customerID}</p>
+        <p>Customer Name: {customer.customerName}</p>
+        <p>Address: {customer.customerAddress}</p>
+        <p>Cell Number: {customer.customerPhone}</p>
       </CardContent>
       <CardContent align="right" className={classes.cardContent}>
-        <p >Invoice:{saleRecord.receiptID}</p>
-        <p>Date:{saleRecord.Date}</p>
+        <p >Invoice: {saleRecord.receiptID}</p>
+        <p>Date: {saleRecord.Date}</p>
       </CardContent>
     </Card>
   )
 }
 
-function BillInformation({saleReceipt,saleRecord}){
+function BillInformation({ saleReceipt, saleRecord }) {
   return (
-<Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Quantity</TableCell>
-            <TableCell>Retail Price</TableCell>
-            <TableCell>Total per item</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {
-            saleReceipt.map((item, idx) =>
-              <TableRow key={idx}>
-                <TableCell>{idx + 1}</TableCell>
-                <TableCell>{item.productName}</TableCell>
-                <TableCell>{item.quantity}</TableCell>
-                <TableCell>{item.price}</TableCell>
-                <TableCell>{item.total}</TableCell>
-              </TableRow>
-            )
-          }
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell>Total</TableCell>
-            <TableCell></TableCell>
-            <TableCell>{saleRecord.totalProducts}</TableCell>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>Name</TableCell>
+          <TableCell>Quantity</TableCell>
+          <TableCell>Retail Price</TableCell>
+          <TableCell>Total per item</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {
+          saleReceipt.map((item, idx) =>
+            <TableRow key={idx}>
+              <TableCell>{idx + 1}</TableCell>
+              <TableCell>{item.productName}</TableCell>
+              <TableCell>{item.quantity}</TableCell>
+              <TableCell>{item.price}</TableCell>
+              <TableCell>{item.total}</TableCell>
+            </TableRow>
+          )
+        }
+      </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell>Total</TableCell>
+          <TableCell></TableCell>
+          <TableCell>{saleRecord.totalProducts}</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
   )
 }
 

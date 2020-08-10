@@ -17,6 +17,7 @@ import AddCustomer from './pages/customers/add';
 import SalesView from './pages/Sales/View';
 import Setting from './pages/Setting/Setting';
 import ViewAdmin from './pages/Setting/ViewAdmin';
+import Backup from './pages/Setting/Backup';
 
 function App() {
   const navigation = [
@@ -75,6 +76,10 @@ function App() {
     {
       component: <ViewAdmin />,
       path: '/admin'
+    },
+    {
+      component:<Backup />,
+      path:'/backup'
     }
   ]
   return (
