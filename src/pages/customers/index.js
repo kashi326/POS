@@ -49,7 +49,6 @@ export default function SimpleTable() {
         _id: { $eq: _id }
       }
     }).exec();
-    console.log(doc);
     doc.remove();
     const cData = await db.customers.find().exec();
     setCustomers(cData);
@@ -62,7 +61,6 @@ export default function SimpleTable() {
   }
 
   function clearHandler(e) {
-    console.log('called');
     setSearchValue("");
     setFilteredData(customers);
   }

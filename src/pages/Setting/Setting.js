@@ -87,14 +87,12 @@ function Setting() {
         })
         break;
       default:
-        console.log('error');
         break;
     }
     const tempSetting = await db.setting.findOne().exec();
     sessionStorage.setItem('setting',JSON.stringify(tempSetting));
     setisUpdated(true);
     setTimeout(() => setisUpdated(false), 2000);
-    // console.log(list);
   }
   const list = [
     {

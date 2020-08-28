@@ -21,7 +21,6 @@ function Purchase() {
         
         setpurchases(pData);
         setFilteredData(pData);
-        // console.log(filteredData);
     }
 
     useEffect(() => {
@@ -35,7 +34,6 @@ function Purchase() {
     }
 
     function clearHandler(e) {
-        console.log('called');
         setSearchValue("");
         setFilteredData(purchases);
     }

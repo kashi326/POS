@@ -119,7 +119,6 @@ export default function AddItem() {
 
     async function submitHandler() {
         if (validate()) {
-            console.log(true);
             return;
         } else {
             const db = await Database.get();

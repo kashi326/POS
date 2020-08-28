@@ -45,8 +45,6 @@ function SalesView() {
         alert("Record doesn't exist. it might because record is delete");
         history.push('/sales');
       }
-      // const pData = await db.salesreceipt.find().exec();
-      // console.log(sData);
       setsaleReceipt(srData);
       setsaleRecord(sData);
     }

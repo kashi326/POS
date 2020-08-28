@@ -41,14 +41,10 @@ function PurchaseView() {
           receiptID: { $eq: id }
         }
       }).exec();
-      console.log(pData);
-      console.log(prData);
       if (pData == null || prData == null) {
         alert("Record doesn't exist. it might because record is delete");
         history.push('/purchase');
       }
-      // const pData = await db.purchasereceipt.find().exec();
-      // console.log(pData);
       setpurchaseReceipt(prData);
       setpurchaseRecord(pData);
     }

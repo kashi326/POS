@@ -48,7 +48,6 @@ function AddCustomer() {
       if(!customerForm.startingBalance){
         customerForm.startingBalance = 0;
       }
-      console.log(customerForm);
       const db = await Database.get();
       await db.customers.insert(customerForm);
       history.push('/customers');

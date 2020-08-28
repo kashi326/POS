@@ -59,7 +59,6 @@ function Sales() {
         setFilteredData(salesData.filter(v => v.customerID.toLowerCase().includes(value.toLowerCase())));
     }
     function clearHandler(e) {
-        console.log('called');
         setSearchValue("");
         setFilteredData(salesData);
     }

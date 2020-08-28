@@ -28,9 +28,6 @@ const useStyles = makeStyles({
   }
 });
 const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-console.log(user);
-
-
 function Home() {
   const classes = useStyles();
   const [sales, setsales] = useState([]);

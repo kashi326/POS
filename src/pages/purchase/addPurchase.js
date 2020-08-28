@@ -44,7 +44,6 @@ function Addpurchase() {
     setButtonDisabled(false)
     let bList = [...List];
     bList.splice(index, 1);
-    console.log(bList);
     setItemsInList(bList);
   }
   function cancelList() {
@@ -71,7 +70,6 @@ function Addpurchase() {
       if (item.productName !== '' && item.quantity !== 0 && item.retailPrice !== 0 && item.salePrice !== 0) {
         totalProducts = totalProducts + Number(item.quantity);
         Bill += (Number(item.quantity) * Number(item.retailPrice));
-        console.log(totalProducts);
         const invenProduct = await db.inventory.findOne({
           selector: {
             productName: { $eq: item.productName },
@@ -99,7 +97,7 @@ function Addpurchase() {
         await db.purchasereceipt.insert(purchaseItem);
       }
       else
-        console.log('item is empty, not added')
+        alert('item is empty, not added')
     });
     const purchasereceipt = {
       'receiptID': uniqueReceiptID,
@@ -109,7 +107,6 @@ function Addpurchase() {
       'paid': paid,
       'remainingBalance':(Bill - paid)
     }
-    console.log(purchasereceipt);
     await db.purchase.insert(purchasereceipt);
     history.push('/purchase');
   }

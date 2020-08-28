@@ -35,7 +35,6 @@ function AddtoInventory() {
     setButtonDisabled(false)
     let bList = [...List];
     bList.splice(index, 1);
-    console.log(bList);
     setItemsInList(bList);
   }
   function cancelList() {

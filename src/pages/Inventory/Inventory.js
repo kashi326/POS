@@ -37,7 +37,6 @@ function Inventory() {
         _id: { $eq: _id }
       }
     }).exec();
-    console.log(doc);
     doc.remove();
     const invenData = await db.inventory.find().exec();
     setrowsData(invenData);
@@ -82,7 +81,6 @@ function Inventory() {
         _id: { $eq: id }
       }
     }).exec();
-    console.log(toUpdate)
     setTimeout(() => {
       if (toUpdate !== null) {
         toUpdate.update({
