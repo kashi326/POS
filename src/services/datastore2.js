@@ -1,8 +1,16 @@
 import { createRxDatabase, addRxPlugin } from 'rxdb';
-
-
-import {removeRxDatabase} from 'rxdb';
+import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption';
+import { removeRxDatabase } from 'rxdb';
+import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
+import { RxDBValidatePlugin } from 'rxdb/plugins/validate';
+import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
+addRxPlugin(RxDBJsonDumpPlugin);
+addRxPlugin(RxDBUpdatePlugin);
+addRxPlugin(RxDBValidatePlugin)
+addRxPlugin(RxDBLeaderElectionPlugin);
 addRxPlugin(require('pouchdb-adapter-idb'));
+addRxPlugin(RxDBEncryptionPlugin);
 const collections = [
     {
         name: 'heroes',
@@ -14,37 +22,37 @@ const collections = [
         },
         sync: true
     },
-    
+
     {
-      name: 'customers',
-      schema: require('./Schema.js').default.customerSchema
+        name: 'customers',
+        schema: require('./Schema.js').default.customerSchema
     },
     {
-        name:'inventory',
+        name: 'inventory',
         schema: require('./InventorySchema').default.inventorySchema
     },
     {
-        name:'sales',
+        name: 'sales',
         schema: require('./SalesSchema').default.SalesSchema
     },
     {
-        name:'salesreceipt',
+        name: 'salesreceipt',
         schema: require('./SalesSchema').default.ReceiptSchema
     },
     {
-        name:'purchase',
+        name: 'purchase',
         schema: require('./purchaseSchema').default.purchaseSchema
     },
     {
-        name:'purchasereceipt',
+        name: 'purchasereceipt',
         schema: require('./purchaseSchema').default.purchaseReceiptSchema
     },
     {
-        name:'setting',
+        name: 'setting',
         schema: require('./SettingSchema').default.SettingSchema
     },
     {
-        name:'user',
+        name: 'user',
         schema: require('./UserSchema').default.UserSchema
     }
 ];
@@ -56,7 +64,7 @@ let dbPromise = null;
 
 const _create = async () => {
     console.log('DatabaseService: creating database..');
-    const db = await createRxDatabase({name: 'heroesreactdb', adapter: 'idb', password: 'myLongAndStupidPassword'});
+    const db = await createRxDatabase({ name: 'heroesreactdb', adapter: 'idb', password: 'myLongAndStupidPassword' });
     console.log('DatabaseService: created database');
     window['db'] = db; // write to window for debugging
 
@@ -97,6 +105,6 @@ export const get = () => {
         dbPromise = _create();
     return dbPromise;
 }
-export const remove = ()=>{
-    removeRxDatabase('heroesreactdb','idb');
+export const remove = () => {
+    removeRxDatabase('heroesreactdb', 'idb');
 }

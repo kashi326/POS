@@ -6,6 +6,7 @@ import * as Database from '../../services/datastore2';
 import { useEffect } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import TitleHead from '../../component/TitleHead';
+
 const useStyles = makeStyles({
   root: {
     height: '100vh'
@@ -34,10 +35,6 @@ function Setting() {
     const db = await Database.get();
     let sData = await db.setting.findOne().exec();
     if (sData !== null) {
-      setsettings(sData);
-    }else{
-      await db.setting.insert({shopName:'Shop',shopAddress:'Address',shopOwnerName:'Owner Name',shopOwnerPhone:'Phone No',shopOwnerEmail:'Email'});
-      sData = await db.setting.findOne().exec();
       setsettings(sData);
     }
   }
@@ -93,6 +90,8 @@ function Setting() {
         console.log('error');
         break;
     }
+    const tempSetting = await db.setting.findOne().exec();
+    sessionStorage.setItem('setting',JSON.stringify(tempSetting));
     setisUpdated(true);
     setTimeout(() => setisUpdated(false), 2000);
     // console.log(list);

@@ -103,6 +103,7 @@ function Sidebar(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    const setting = JSON.parse(sessionStorage.getItem('setting')||'{}');
     const sidebarLinks = [
         {
             name: 'Home',
@@ -200,7 +201,7 @@ function Sidebar(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        Rayyan CCTV
+                        {setting.shopName}
                     </Typography>
                     <div style={{ flexGrow: 1 }}></div>
                     {/* <Typography variant="subtitle1"><Link className={classes.link} onClick={()=>Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography> */}

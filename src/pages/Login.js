@@ -13,19 +13,11 @@ import * as Database from '../services/datastore2';
 import { makeStyles } from '@material-ui/core/styles';
 import '../App.css';
 import { Redirect } from 'react-router-dom';
-import { useEffect } from 'react';
 import Alert from '@material-ui/lab/Alert';
 
 const style = makeStyles((theme) => ({
   root: {
     height: '100%'
-  },
-  image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
   },
   grid: {
     height: '75%',
@@ -56,16 +48,9 @@ function Login() {
   const [password, setpassword] = useState("");
   const [error, seterror] = useState(false)
   const classes = style();
-  async function initDB() {
-    const db = await Database.get();
-    const user = await db.user.findOne({ selector: { Email: { $eq: 'admin@admin.com' } } }).exec();
-    if (user === null) {
-      await db.user.insert({ Email: 'admin@admin.com', Password: 'admin' })
-    }
-  }
-  useEffect(() => { initDB() }, []);
   async function HandleLogin() {
     const db = await Database.get();
+    let setting = await db.setting.findOne().exec();
     const user = await db.user.findOne({
       selector: {
         Email: { $eq: username },
@@ -77,6 +62,7 @@ function Login() {
     } else {
       sessionStorage.setItem('isLogined', true);
       sessionStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('setting', JSON.stringify(setting));
       setusername("");
     }
   }

@@ -57,7 +57,7 @@ function AddtoInventory() {
     }
     const db = await Database.get();
     itemsInList.forEach(async item => {
-      const invenProduct = await db.inventory.findOne({
+      let invenProduct = await db.inventory.findOne({
         selector: {
           productName: { $eq: item.productName },
         }
@@ -71,6 +71,7 @@ function AddtoInventory() {
       }
       else
         db.inventory.insert(item)
+      invenProduct = "";  
     });
     history.push('/inventory');
   }

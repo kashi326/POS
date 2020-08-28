@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/Login';
@@ -18,8 +18,20 @@ import SalesView from './pages/Sales/View';
 import Setting from './pages/Setting/Setting';
 import ViewAdmin from './pages/Setting/ViewAdmin';
 import Backup from './pages/Setting/Backup';
-
+import Setup from './pages/Setup';
+import * as Database from './services/datastore2';
 function App() {
+  async function initDB() {
+    const db = await Database.get();
+    const setting = await db.setting.findOne().exec();
+    const user = await db.user.findOne().exec();
+    if (setting === null || user === null)
+      setisAppSetuped(false);
+  }
+  useEffect(() => {
+    initDB();
+  }, []);
+  const [isAppSetuped, setisAppSetuped] = useState(true);
   const navigation = [
     {
       component: <Home />,
@@ -78,18 +90,24 @@ function App() {
       path: '/admin'
     },
     {
-      component:<Backup />,
-      path:'/backup'
+      component: <Backup />,
+      path: '/backup'
     }
   ]
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact component={Login} />
-        {navigation.map((ele,idx) =>
-          <Route path={ele.path} exact key={idx}><Sidebar component={ele.component} /></Route>
-        )}
-      </Switch>
+      {isAppSetuped ?
+        <Switch>
+          <Route path="/" exact component={Login} />
+          {navigation.map((ele, idx) =>
+            <Route path={ele.path} exact key={idx}><Sidebar component={ele.component} /></Route>
+          )}
+        </Switch> 
+        :
+        <Switch>
+          <Route path="/" exact component={Setup} />
+        </Switch>
+      }
     </Router>
   );
 }
