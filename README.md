@@ -20,4 +20,11 @@ npm start
   <br/>
   <br/>
   <br/>
+##How to Use  
+Enter Your Store Details like name, address and contact info    
+create a username and password  
+if You have a backup. Restore Backup from Setting->restore Backup option  
+  
+    
+      
 Note that the app is under development and more feature will be adding in incremental way <br/>
