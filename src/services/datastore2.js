@@ -1,4 +1,4 @@
-import { createRxDatabase, addRxPlugin } from 'rxdb';
+import { createRxDatabase, addRxPlugin, } from 'rxdb';
 import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption';
 import { removeRxDatabase } from 'rxdb';
 import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';

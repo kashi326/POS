@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 function Backup() {
   async function initDB() {
     const db = await Database.get();
-      await db.dump()
+      await db.dump(true)
         .then(json => handleSaveToPC(json));
   }
   const handleSaveToPC = data =>{

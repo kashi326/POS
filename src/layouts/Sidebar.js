@@ -170,6 +170,10 @@ function Sidebar(props) {
                 {
                     name:'Backup',
                     path:'/backup'
+                },
+                {
+                    name:'Restore Backup',
+                    path:'/restorebackup'
                 }
             ]
         },

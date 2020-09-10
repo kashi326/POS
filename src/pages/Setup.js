@@ -4,6 +4,7 @@ import { Paper, TextField, Grid, Button } from '@material-ui/core';
 import bgImage from '../bgImage.jpg';
 import * as Database from '../services/datastore2';
 import { Redirect } from 'react-router-dom';
+import RestoreBackup from './Setting/RestoreBackup';
 const style = makeStyles((theme) => ({
   root: {
     padding: '10px',
@@ -113,7 +114,7 @@ function Setup() {
       <p >Welcome, Please setup basic setting of your app to start right away</p>
       {
         toSetupUser ?
-          <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={6} square>
+          <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={8} square>
             {
               Auser.map((ele, idx) => 
                 <UserComponent key={idx} idx={idx} oldValue={ele} handleUserChange={handleUserChange} />
@@ -122,7 +123,7 @@ function Setup() {
             <Button onClick={insertUser} color="primary" variant="contained" className={classes.actionButton}>Submit</Button>
           </Grid>
           :
-          <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={6} square>
+          <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={8} square>
             {
               Asetting.map((ele, idx) =>
                 <SettingComponent key={idx} idx={idx} oldValue={ele} handleSettingChange={handleSettingChange} />
@@ -131,6 +132,12 @@ function Setup() {
             <Button onClick={insertSetting} color="primary" variant="contained" className={classes.actionButton}>Submit</Button>
           </Grid>
       }
+      <p style={{marginLeft:'50%'}}>OR</p>
+      <div style={{width:'66.66%'}} className={classes.formGrid}>
+      {
+        <RestoreBackup from={1}/>
+      }
+      </div>
     </Paper>
   )
 };

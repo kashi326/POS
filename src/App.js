@@ -19,6 +19,7 @@ import Setting from './pages/Setting/Setting';
 import ViewAdmin from './pages/Setting/ViewAdmin';
 import Backup from './pages/Setting/Backup';
 import Setup from './pages/Setup';
+import RestoreBackup from './pages/Setting/RestoreBackup';
 import * as Database from './services/datastore2';
 function App() {
   async function initDB() {
@@ -92,6 +93,10 @@ function App() {
     {
       component: <Backup />,
       path: '/backup'
+    },
+    {
+      component:<RestoreBackup/>,
+      path:'/restorebackup'
     }
   ]
   return (

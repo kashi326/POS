@@ -27,7 +27,6 @@ const useStyles = makeStyles({
     maxWidth: '800px'
   }
 });
-const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 function Home() {
   const classes = useStyles();
   const [sales, setsales] = useState([]);
