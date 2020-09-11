@@ -35,6 +35,10 @@ function App() {
   const [isAppSetuped, setisAppSetuped] = useState(true);
   const navigation = [
     {
+      component: <Login />,
+      path: "/login"
+    },
+    {
       component: <Home />,
       path: "/home"
     },
@@ -95,8 +99,8 @@ function App() {
       path: '/backup'
     },
     {
-      component:<RestoreBackup/>,
-      path:'/restorebackup'
+      component: <RestoreBackup />,
+      path: '/restorebackup'
     }
   ]
   return (
@@ -107,7 +111,7 @@ function App() {
           {navigation.map((ele, idx) =>
             <Route path={ele.path} exact key={idx}><Sidebar component={ele.component} /></Route>
           )}
-        </Switch> 
+        </Switch>
         :
         <Switch>
           <Route path="/" exact component={Setup} />

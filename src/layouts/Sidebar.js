@@ -14,10 +14,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import { Collapse, Button } from '@material-ui/core';
-import * as Database from '../services/datastore2';
+import * as Database from '../services/datastore2'
+import { Collapse,Button } from '@material-ui/core';
 import { useEffect } from 'react';
 const drawerWidth = 240;
 
@@ -94,6 +94,7 @@ function Sidebar(props) {
     let state = sessionStorage.getItem('sidebar') === "true" ? true : false;
     let isLogined = sessionStorage.getItem('isLogined');
     const [open, setOpen] = React.useState(state);
+    let history = useHistory();
     useEffect(() => {
         sessionStorage.setItem('sidebar', open);
     }, [open]);
@@ -182,6 +183,10 @@ function Sidebar(props) {
             path: '/'
         },
     ];
+    function logout(){
+        sessionStorage.clear();
+        history.push('/login');
+    }
     if (isLogined !== 'true')
         return (<Redirect to='/' />)
 
@@ -208,7 +213,7 @@ function Sidebar(props) {
                         {setting.shopName}
                     </Typography>
                     <div style={{ flexGrow: 1 }}></div>
-                    {/* <Typography variant="subtitle1"><Link className={classes.link} onClick={()=>Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography> */}
+                    <Typography variant="subtitle1"><Link className={classes.link} onClick={logout} style={{ textDecoration: 'none', color: 'white' }}>Sign Out</Link></Typography>
                     <Typography variant="subtitle1"><Button className={classes.link} onClick={() => Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Drop Database</Button></Typography>
                 </Toolbar>
             </AppBar>

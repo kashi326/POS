@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
     marginTop: '10px'
   }
 }));
-const uniqueReceiptID = uuidV4().substring(0,8);
+const uniqueReceiptID = uuidV4();
 function Addpurchase() {
   const classes = useStyles();
   const [itemsInList, setItemsInList] = useState([]);

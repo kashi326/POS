@@ -5,10 +5,11 @@ import bgImage from '../bgImage.jpg';
 import * as Database from '../services/datastore2';
 import { Redirect } from 'react-router-dom';
 import RestoreBackup from './Setting/RestoreBackup';
+import TitleHead from '../component/TitleHead';
 const style = makeStyles((theme) => ({
   root: {
     padding: '10px',
-    height: '100vh',
+    height: '100%',
     color: 'white'
   },
   formGrid: {
@@ -16,7 +17,6 @@ const style = makeStyles((theme) => ({
     color: 'white',
     borderRadius:'5px',
     marginLeft: '15.5%',
-    marginTop: '8%'
   },
   actionButton: {
     width: '50%',
@@ -107,14 +107,15 @@ function Setup() {
       return false;
   }
   if(SetupComplete){
-    return <Redirect to='/' />
+    return <Redirect to='/login' />
   }
   return (
-    <Paper className={classes.root} style={{ backgroundImage: `url(${bgImage})` }}>
+    <Paper className={classes.root} style={{ backgroundImage: `url(${bgImage})` ,}}>
       <p >Welcome, Please setup basic setting of your app to start right away</p>
       {
         toSetupUser ?
           <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={8} square>
+            <TitleHead name="App Setup"/>
             {
               Auser.map((ele, idx) => 
                 <UserComponent key={idx} idx={idx} oldValue={ele} handleUserChange={handleUserChange} />
@@ -124,6 +125,7 @@ function Setup() {
           </Grid>
           :
           <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={8} square>
+            <TitleHead name="User Setup"/>
             {
               Asetting.map((ele, idx) =>
                 <SettingComponent key={idx} idx={idx} oldValue={ele} handleSettingChange={handleSettingChange} />

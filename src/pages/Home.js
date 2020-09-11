@@ -27,33 +27,37 @@ const useStyles = makeStyles({
     maxWidth: '800px'
   }
 });
+
 function Home() {
   const classes = useStyles();
   const [sales, setsales] = useState([]);
+  const startCalValue = { totalSale: 1.0, MonthlySale: 0.0, CustomerDebt: 0.0, MonthlyExpense: 0.0, purchases: 0.0 };
+  const [calculateValue, setcalculateValue] = useState(startCalValue);
+  
   const data = [
     {
       name: 'Total Sale',
-      value: 0.0,
+      value: calculateValue.totalSale,
       Link: '/'
     },
     {
       name: 'Monthly Sale',
-      value: 0.0,
+      value: calculateValue.MonthlySale,
       Link: '/'
     },
     {
       name: 'Customer Debt',
-      value: 0.0,
+      value: calculateValue.CustomerDebt,
       Link: '/'
     },
     {
       name: 'Monthly Expense',
-      value: 0.0,
+      value: calculateValue.MonthlyExpense,
       Link: '/'
     },
     {
       name: 'Purchases',
-      value: 0.0,
+      value: calculateValue.purchases,
       Link: '/'
     },
   ];
@@ -61,9 +65,15 @@ function Home() {
   async function initDB() {
     const db = await Database.get();
     const sData = await db.sales.find().exec();
+    let totalSaleAmount = 0;
+    sData && sData.map(e =>
+      totalSaleAmount = totalSaleAmount+e.paid
+      )
+    startCalValue.totalSale = totalSaleAmount;
+    setcalculateValue(startCalValue);
     setsales(sData);
   }
-  useEffect(() => { initDB() });
+  useEffect(() => { initDB() },);
   return (
     <div className={classes.root}>
       <Grid container component='main' className={classes.root}>

@@ -70,7 +70,7 @@ function SaleItem({ index, item }) {
     );
 }
 
-const uniqueReceiptID = uuidV4().substring(0,8);
+const uniqueReceiptID = uuidV4();
 
 export default function AddItem() {
     const classes = useStyles();

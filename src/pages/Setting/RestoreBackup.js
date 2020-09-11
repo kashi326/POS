@@ -10,7 +10,7 @@ export default function RestoreBackup({ from }) {
   const [error, seterror] = useState(false);
   let history = useHistory();
   if (error && from) {
-    history.push('/home');
+    history.push('/login');
   }
   async function restoreBackup() {
     const db = await Database.get();
