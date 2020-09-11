@@ -2,6 +2,13 @@
   "name": "rayyancctv",
   "version": "0.1.0",
   "private": true,
+  "description": "pos",
+  "author": "kashi326",
+  "build": {
+    "appId": "<com.your_app>"
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
   "dependencies": {
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
@@ -10,23 +17,35 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.3.1",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
+    "electron": "^10.1.1",
+    "electron-builder": "^22.8.0",
+    "electron-is-dev": "^1.2.0",
     "pouchdb": "^7.2.1",
     "pouchdb-adapter-idb": "^7.2.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.3",
     "rxdb": "^9.3.0",
     "rxjs": "^6.6.0",
     "styled-components": "^5.1.1",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "wait-on": "^5.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": "react-app"
