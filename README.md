@@ -1,7 +1,7 @@
 # POS
 
 
-POS is a react based offline app that can be used on personal either in browser
+POS is a react based offline app that can be used on personal computer either in browser
 or as an software by using [React-electron-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
 
 # New Features!
