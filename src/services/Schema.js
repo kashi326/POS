@@ -45,4 +45,28 @@ const customerSchema = {
   }
 }
 
-export default { heroSchema, customerSchema };
+const expenseSchema = {
+  'title': 'expense schema',
+  'description': 'Customer information',
+  'version': 0,
+  'type': 'object',
+  'properties': {
+    ExpenseName: {
+      type: 'string'
+    },
+    ExpenseDate: {
+      type: 'string'
+    },
+    PaidTo: {
+      type: 'string'
+    },
+    Amount: {
+      type: 'number',
+      default: 0
+    }
+  }
+};
+
+
+
+export default { heroSchema, customerSchema, expenseSchema };

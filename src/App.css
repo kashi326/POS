@@ -2,6 +2,11 @@
   height: 100%;
   text-align: center;
 }
+.MuiTableCell-head {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 600 !important;
+  line-height: 1.5rem;
+}
 @media only screen and (min-width:500px){
   .grid{
     height: 100%;
