@@ -213,7 +213,7 @@ function Sidebar(props) {
                         {setting.shopName}
                     </Typography>
                     <div style={{ flexGrow: 1 }}></div>
-                    <Typography variant="subtitle1"><Link className={classes.link} onClick={logout} style={{ textDecoration: 'none', color: 'white' }}>Sign Out</Link></Typography>
+                    <Typography variant="subtitle1"><Link to="" className={classes.link} onClick={logout} style={{ textDecoration: 'none', color: 'white' }}>Sign Out</Link></Typography>
                     <Typography variant="subtitle1"><Button className={classes.link} onClick={() => Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Drop Database</Button></Typography>
                 </Toolbar>
             </AppBar>

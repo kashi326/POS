@@ -5,7 +5,7 @@
   "description": "pos",
   "author": "kashi326",
   "build": {
-    "appId": "<com.your_app>"
+    "appId": "rayyan.cctv.test"
   },
   "main": "public/electron.js",
   "homepage": "./",
@@ -19,8 +19,6 @@
     "bootstrap": "^4.3.1",
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.2",
-    "electron": "^10.1.1",
-    "electron-builder": "^22.8.0",
     "electron-is-dev": "^1.2.0",
     "pouchdb": "^7.2.1",
     "pouchdb-adapter-idb": "^7.2.1",
@@ -61,5 +59,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^10.1.1",
+    "electron-builder": "^22.8.0"
   }
 }

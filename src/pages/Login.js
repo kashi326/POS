@@ -48,6 +48,7 @@ function Login() {
   const [password, setpassword] = useState("");
   const [error, seterror] = useState(false)
   const classes = style();
+  console.log(window.location.host);
   async function HandleLogin() {
     const db = await Database.get();
     let setting = await db.setting.findOne().exec();

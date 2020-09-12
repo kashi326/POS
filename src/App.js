@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -104,7 +104,7 @@ function App() {
     }
   ]
   return (
-    <Router>
+    <Router basename="/">
       {isAppSetuped ?
         <Switch>
           <Route path="/" exact component={Login} />
