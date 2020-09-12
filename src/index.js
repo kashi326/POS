@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import InventoryItemsProvider from './context/InventoryItemProvider';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <InventoryItemsProvider>
     <App />
-  </React.StrictMode>,
+  </InventoryItemsProvider>,
   document.getElementById('root')
 );
 
