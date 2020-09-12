@@ -21,6 +21,10 @@ import Backup from './pages/Setting/Backup';
 import Setup from './pages/Setup';
 import RestoreBackup from './pages/Setting/RestoreBackup';
 import * as Database from './services/datastore2';
+import Expense from './pages/expenses/Expense';
+import AddExpense from './pages/expenses/add';
+
+
 function App() {
   async function initDB() {
     const db = await Database.get();
@@ -101,6 +105,13 @@ function App() {
     {
       component: <RestoreBackup />,
       path: '/restorebackup'
+    },
+    {
+      component:<Expense />,
+      path:'/expense'
+    },{
+      component:<AddExpense />,
+      path:'/expense/add'
     }
   ]
   return (

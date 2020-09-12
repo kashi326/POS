@@ -17,7 +17,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import * as Database from '../services/datastore2'
-import { Collapse,Button } from '@material-ui/core';
+import { Collapse, Button } from '@material-ui/core';
 import { useEffect } from 'react';
 const drawerWidth = 240;
 
@@ -104,7 +104,7 @@ function Sidebar(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    const setting = JSON.parse(sessionStorage.getItem('setting')||'{}');
+    const setting = JSON.parse(sessionStorage.getItem('setting') || '{}');
     const sidebarLinks = [
         {
             name: 'Home',
@@ -153,6 +153,20 @@ function Sidebar(props) {
             ]
         },
         {
+            name: 'Expense',
+            path: '',
+            children: [
+                {
+                    name: 'Expenses',
+                    path: '/expense'
+                },
+                {
+                    name: 'New Expense',
+                    path: '/expense/add'
+                },
+            ]
+        },
+        {
             name: 'Customers',
             path: '/customers'
         },
@@ -169,12 +183,12 @@ function Sidebar(props) {
                     path: '/admin'
                 },
                 {
-                    name:'Backup',
-                    path:'/backup'
+                    name: 'Backup',
+                    path: '/backup'
                 },
                 {
-                    name:'Restore Backup',
-                    path:'/restorebackup'
+                    name: 'Restore Backup',
+                    path: '/restorebackup'
                 }
             ]
         },
@@ -183,7 +197,7 @@ function Sidebar(props) {
             path: '/'
         },
     ];
-    function logout(){
+    function logout() {
         sessionStorage.clear();
         history.push('/login');
     }

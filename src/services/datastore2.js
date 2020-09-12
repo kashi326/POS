@@ -28,7 +28,11 @@ const collections = [
         schema: require('./Schema.js').default.customerSchema
     },
     {
-        name: 'inventory',
+      name: 'expenses',
+      schema: require('./Schema.js').default.expenseSchema
+    },
+    {
+        name:'inventory',
         schema: require('./InventorySchema').default.inventorySchema
     },
     {
@@ -73,7 +77,7 @@ const _create = async () => {
         console.log('isLeader now');
         document.title = '♛ ' + document.title;
     });
-
+    
     // create collections
     console.log('DatabaseService: create collections');
     await Promise.all(collections.map(colData => db.collection(colData)));
