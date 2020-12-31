@@ -171,16 +171,16 @@ function Sidebar(props) {
             path: '/customers'
         },
         {
+            name: 'Employees',
+            path: '/employee'
+        },
+        {
             name: 'Setting',
             path: '',
             children: [
                 {
                     name: 'Setting',
                     path: '/setting'
-                },
-                {
-                    name: 'Admin',
-                    path: '/admin'
                 },
                 {
                     name: 'Backup',
@@ -227,7 +227,7 @@ function Sidebar(props) {
                         {setting.shopName}
                     </Typography>
                     <div style={{ flexGrow: 1 }}></div>
-                    <Typography variant="subtitle1"><Link className={classes.link} onClick={logout} style={{ textDecoration: 'none', color: 'white' }}>Sign Out</Link></Typography>
+                    <Typography variant="subtitle1"><Link to="/login" className={classes.link} onClick={logout} style={{ textDecoration: 'none', color: 'white' }}>Sign Out</Link></Typography>
                     <Typography variant="subtitle1"><Button className={classes.link} onClick={() => Database.remove()} style={{ textDecoration: 'none', color: 'white' }}>Drop Database</Button></Typography>
                 </Toolbar>
             </AppBar>
@@ -254,7 +254,7 @@ function Sidebar(props) {
                 className={clsx(classes.content, {
                     [classes.contentShift]: open,
                 })}
-                style={{ background: 'lightgray', height: '100vh' }}
+                style={{background:'lightgray' , height: '100vh' }}
             >
                 <div className={classes.drawerHeader} />
                 {props.component}

@@ -11,6 +11,12 @@ const UserSchema = {
     Password: {
       type: 'string'
     },
+    Name:{
+      type:'string'
+    },
+    Phone:{
+      type:'string'
+    },
     CreateAt: {
       type: 'string'
     },

@@ -16,14 +16,15 @@ import CustomersList from './pages/customers/index';
 import AddCustomer from './pages/customers/add';
 import SalesView from './pages/Sales/View';
 import Setting from './pages/Setting/Setting';
-import ViewAdmin from './pages/Setting/ViewAdmin';
+import ViewEmployees from './pages/Employee/ViewEmployees';
 import Backup from './pages/Setting/Backup';
 import Setup from './pages/Setup';
 import RestoreBackup from './pages/Setting/RestoreBackup';
 import * as Database from './services/datastore2';
 import Expense from './pages/expenses/Expense';
 import AddExpense from './pages/expenses/add';
-
+import AddEmployee from './pages/Employee/AddEmployee';
+import EditEmployee from './pages/Employee/EditEmployee';
 
 function App() {
   async function initDB() {
@@ -95,8 +96,16 @@ function App() {
       path: '/setting'
     },
     {
-      component: <ViewAdmin />,
-      path: '/admin'
+      component: <ViewEmployees />,
+      path: '/employee'
+    },
+    {
+      component: <AddEmployee />,
+      path: '/employee/add'
+    },
+    {
+      component: <EditEmployee />,
+      path:'/employee/edit/:id'
     },
     {
       component: <Backup />,
@@ -107,11 +116,12 @@ function App() {
       path: '/restorebackup'
     },
     {
-      component:<Expense />,
-      path:'/expense'
-    },{
-      component:<AddExpense />,
-      path:'/expense/add'
+      component: <Expense />,
+      path: '/expense'
+    }, 
+    {
+      component: <AddExpense />,
+      path: '/expense/add'
     }
   ]
   return (

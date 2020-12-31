@@ -11,6 +11,8 @@ addRxPlugin(RxDBValidatePlugin)
 addRxPlugin(RxDBLeaderElectionPlugin);
 addRxPlugin(require('pouchdb-adapter-idb'));
 addRxPlugin(RxDBEncryptionPlugin);
+
+// removeRxDatabase('heroesreactdb', 'idb');
 const collections = [
     {
         name: 'heroes',

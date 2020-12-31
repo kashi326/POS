@@ -1,11 +1,9 @@
 import React from 'react'
 
-function AddAdmin() {
+export default function EditEmployee() {
   return (
     <div>
-      
+      hello
     </div>
   )
 }
-
-export default AddAdmin

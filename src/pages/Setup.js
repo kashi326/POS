@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, TextField, Grid, Button } from '@material-ui/core';
 import bgImage from '../bgImage.jpg';
@@ -6,6 +6,7 @@ import * as Database from '../services/datastore2';
 import { Redirect } from 'react-router-dom';
 import RestoreBackup from './Setting/RestoreBackup';
 import TitleHead from '../component/TitleHead';
+import NewUser from '../component/NewUser';
 const style = makeStyles((theme) => ({
   root: {
     padding: '10px',
@@ -15,7 +16,7 @@ const style = makeStyles((theme) => ({
   formGrid: {
     padding: '10px',
     color: 'white',
-    borderRadius:'5px',
+    borderRadius: '5px',
     marginLeft: '15.5%',
   },
   actionButton: {
@@ -28,7 +29,7 @@ const style = makeStyles((theme) => ({
 
 function Setup() {
   const classes = style();
-  
+
   async function initDB() {
     const db = await Database.get();
     const setting = await db.setting.findOne().exec();
@@ -38,23 +39,18 @@ function Setup() {
   useEffect(() => {
     initDB();
   }, []);
-  
-  
-  
-  
+
+
+
+
   const [toSetupUser, settoSetupUser] = useState(false);
   const [SetupComplete, setSetupComplete] = useState(false);
   const Osetting = { shopName: '', shopAddress: '', shopOwnerName: '', shopOwnerPhone: '', shopOwnerEmail: '' };
   const Asetting = Object.entries(Osetting);
-  const Ouser = { Email: '', Password: '' };
-  const Auser = Object.entries(Ouser);
+
   function handleSettingChange(e, idx) {
     const name = e.target.name;
     Osetting[name] = e.target.value;
-  }
-  function handleUserChange(e){
-    const name = e.target.name;
-    Ouser[name] = e.target.value;  
   }
   async function insertSetting() {
     if (validateSetting(Osetting)) {
@@ -65,16 +61,8 @@ function Setup() {
     await db.setting.insert(Osetting);
     settoSetupUser(true);
   }
-  async function insertUser() {
-    if (validateUser(Ouser)) {
-      return;
-    }
-    console.log('bye');
-    const db = await Database.get();
-    await db.user.insert(Ouser);
-    setSetupComplete(true);
-  }
-  
+
+
   function validateSetting(toValidate) {
     console.log('hello');
     if (Osetting.shopName === "") {
@@ -95,37 +83,22 @@ function Setup() {
     } else
       return false;
   }
-  function validateUser(toValidate) {
-    console.log('hello');
-    if (Osetting.username === "") {
-      alert("please fill username Field");
-      return true;
-    } else if (Osetting.password === "") {
-      alert("please fill password Field");
-      return true;
-    } else
-      return false;
-  }
-  if(SetupComplete){
+
+  if (SetupComplete) {
     return <Redirect to='/login' />
   }
   return (
-    <Paper className={classes.root} style={{ backgroundImage: `url(${bgImage})` ,}}>
+    <Paper className={classes.root} style={{ backgroundImage: `url(${bgImage})`, }}>
       <p >Welcome, Please setup basic setting of your app to start right away</p>
       {
         toSetupUser ?
           <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={8} square>
-            <TitleHead name="App Setup"/>
-            {
-              Auser.map((ele, idx) => 
-                <UserComponent key={idx} idx={idx} oldValue={ele} handleUserChange={handleUserChange} />
-              )
-            }
-            <Button onClick={insertUser} color="primary" variant="contained" className={classes.actionButton}>Submit</Button>
+            <TitleHead name="App Setup" />
+            <NewUser setSetupComplete={setSetupComplete} from={1} />
           </Grid>
           :
           <Grid item sm={8} component={Paper} className={classes.formGrid} elevation={8} square>
-            <TitleHead name="User Setup"/>
+            <TitleHead name="User Setup" />
             {
               Asetting.map((ele, idx) =>
                 <SettingComponent key={idx} idx={idx} oldValue={ele} handleSettingChange={handleSettingChange} />
@@ -134,11 +107,11 @@ function Setup() {
             <Button onClick={insertSetting} color="primary" variant="contained" className={classes.actionButton}>Submit</Button>
           </Grid>
       }
-      <p style={{marginLeft:'50%'}}>OR</p>
-      <div style={{width:'66.66%'}} className={classes.formGrid}>
-      {
-        <RestoreBackup from={1}/>
-      }
+      <p style={{ marginLeft: '50%' }}>OR</p>
+      <div style={{ width: '66.66%' }} className={classes.formGrid}>
+        {
+          <RestoreBackup from={1} />
+        }
       </div>
     </Paper>
   )
@@ -160,18 +133,5 @@ function SettingComponent({ oldValue, idx, handleSettingChange }) {
   )
 };
 
-function UserComponent({ oldValue, idx, handleUserChange }) {
-  const classes = style();
-  const [newValue, setnewValue] = useState(oldValue[1]);
-  function handleChange(e) {
-    setnewValue(e.target.value);
-    handleUserChange(e, idx);
-  }
-  const name = oldValue[0];
-  return (
-    <Grid item sm={6} style={{ marginLeft: '25%' }}>
-      <TextField value={newValue} name={name} label={name} className={classes.inputFields} onChange={handleChange} style={{ display: 'block' }} fullWidth></TextField>
-    </Grid>
-  )
-}
+
 export default Setup;
